@@ -1,17 +1,16 @@
 # Model profiles: named endpoints that service manifests reference by id.
-# Placeholder values below (url, model name) — replace with your actual
-# llama-server (or other OpenAI-compatible) endpoint details.
 
-local-fast:
+local:
   type: openai-compatible
-  url: http://127.0.0.1:8080/v1
-  model: CHANGE_ME              # e.g. the model name llama-server was started with
+  url: http://127.0.0.1:8081/v1
+  model: gemma-4-E4B-it-UD-Q5_K_XL.gguf
   temperature: 0.1
   timeout: 120
 
-local-translator:
+external-qwen:
   type: openai-compatible
-  url: http://127.0.0.1:8080/v1
-  model: CHANGE_ME
+  url: http://CHANGE_ME/v1        # external endpoint host/port for the Qwen model
+  model: Qwen3.8-27B-UD-Q4_K_M.gguf
   temperature: 0.1
-  timeout: 120
+  timeout: 300
+  # api_key: CHANGE_ME            # uncomment if the endpoint requires auth

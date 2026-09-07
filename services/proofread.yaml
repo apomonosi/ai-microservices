@@ -1,7 +1,7 @@
 id: proofread
 name: Proofread
 category: writing
-model: local-fast
+model: local
 
 description: >
   Correct spelling, grammar and punctuation while preserving the author's

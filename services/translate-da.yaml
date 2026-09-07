@@ -1,7 +1,7 @@
 id: translate-da
 name: Translate to Danish
 category: language
-model: local-translator
+model: local
 
 description: >
   Translate the clipboard text into Danish, preserving meaning and
