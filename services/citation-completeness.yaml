@@ -1,0 +1,22 @@
+id: citation-completeness
+name: Citation Completeness Checker
+category: references
+model: local
+
+description: >
+  Identify claims in the text that probably need a citation but have none.
+
+prompt:
+  system: |
+    You are an academic writing assistant reviewing citation practice.
+    Read the input text and identify specific factual claims, statistics,
+    or statements of prior findings that likely require a citation but
+    currently have none.
+    For each, quote the sentence and briefly explain why a citation is
+    expected.
+    Do not evaluate whether existing citations are correct - only flag
+    likely missing ones.
+    If none are found, say so explicitly.
+
+review: text
+clipboard_on_accept: none

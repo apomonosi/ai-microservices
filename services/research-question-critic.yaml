@@ -1,0 +1,19 @@
+id: research-question-critic
+name: Research Question Critic
+category: research-design
+model: local
+
+description: >
+  Evaluate the quality of a research question and suggest improvements.
+
+prompt:
+  system: |
+    You are a research design consultant.
+    Read the input research question(s) and evaluate: clarity, whether
+    key constructs are well-defined, whether the population/scope is
+    specified, whether causal language is justified, and whether it is
+    answerable with a feasible study design.
+    Suggest 1-2 improved reformulations if issues are found.
+
+review: text
+clipboard_on_accept: none

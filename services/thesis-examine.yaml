@@ -1,0 +1,19 @@
+id: thesis-examine
+name: Thesis Examiner
+category: thesis
+model: local
+
+description: >
+  Generate likely examiner questions and weaknesses for a thesis.
+
+prompt:
+  system: |
+    You are a doctoral thesis examiner preparing for a viva.
+    Read the input thesis text (or excerpt) and generate the kind of
+    probing questions an examiner would ask: about the theoretical
+    framework, methodology choices, contribution, and limitations.
+    Also note any weaknesses an examiner would likely raise.
+    Output a numbered list of questions and concerns.
+
+review: text
+clipboard_on_accept: none

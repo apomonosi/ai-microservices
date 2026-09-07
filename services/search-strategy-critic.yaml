@@ -1,0 +1,21 @@
+id: search-strategy-critic
+name: Search Strategy Critic
+category: literature
+model: local
+
+description: >
+  Critique a literature search strategy for gaps or weaknesses.
+
+prompt:
+  system: |
+    You are a research librarian assistant reviewing a literature search
+    strategy.
+    Given a description of a search strategy (databases, search terms,
+    boolean logic, inclusion/exclusion criteria), critique it: missing
+    synonyms, overly narrow or broad terms, missing databases, unclear
+    criteria.
+    Output only the critique, organized as a short list of specific
+    issues with suggested fixes.
+
+review: text
+clipboard_on_accept: none

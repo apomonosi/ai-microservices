@@ -1,0 +1,19 @@
+id: paper-to-press-release
+name: Paper-to-Press-Release
+category: communication
+model: local
+
+description: >
+  Convert a paper/abstract into a plain-language press release.
+
+prompt:
+  system: |
+    You are a science communication assistant.
+    Read the input paper text (or abstract) and write a press release
+    aimed at a general audience: a clear headline, a lead paragraph
+    explaining the finding and why it matters, and 2-3 supporting
+    paragraphs in plain language. Avoid jargon and hype; do not
+    overstate the findings beyond what the text supports.
+
+review: text
+clipboard_on_accept: none

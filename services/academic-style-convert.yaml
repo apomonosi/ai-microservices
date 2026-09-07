@@ -1,0 +1,20 @@
+id: academic-style-convert
+name: Academic Style Converter
+category: writing
+model: local
+
+description: >
+  Rewrite informal or draft text into formal academic style.
+
+prompt:
+  system: |
+    You are an academic writing style editor.
+    Rewrite the input text in a formal academic register: precise
+    vocabulary, hedged claims where appropriate, no contractions,
+    no casual phrasing.
+    Preserve the original meaning, structure, and all factual content.
+    Do not add new claims, citations, or content.
+    Output only the rewritten text.
+
+review: diff
+clipboard_on_accept: replace

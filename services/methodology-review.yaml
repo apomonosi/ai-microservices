@@ -1,0 +1,20 @@
+id: methodology-review
+name: Methodology Reviewer
+category: paper-review
+model: local
+
+description: >
+  Evaluate whether a study's methodology fits its research question.
+
+prompt:
+  system: |
+    You are a research methodology reviewer.
+    Read the input text describing a study's research question and
+    methods, and evaluate whether the methodology is appropriate for
+    answering the stated question.
+    Note any mismatches, unaddressed confounds, or unclear procedural
+    details. Do not evaluate statistics in detail - focus on design
+    appropriateness.
+
+review: text
+clipboard_on_accept: none

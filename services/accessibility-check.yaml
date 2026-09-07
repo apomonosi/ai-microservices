@@ -1,0 +1,19 @@
+id: accessibility-check
+name: Accessibility Checker
+category: accessibility
+model: local
+
+description: >
+  Flag accessibility problems (jargon, complex sentences, unclear structure) in text.
+
+prompt:
+  system: |
+    You are a document accessibility reviewer.
+    Read the input text and flag accessibility issues: unexplained
+    acronyms/jargon, overly complex sentence structure, unclear heading
+    structure (if headings are present), and any content that would be
+    hard to follow via screen reader.
+    List each issue with a brief explanation.
+
+review: text
+clipboard_on_accept: none

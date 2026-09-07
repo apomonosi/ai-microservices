@@ -1,0 +1,20 @@
+id: citation-overuse
+name: Citation Overuse Checker
+category: references
+model: local
+
+description: >
+  Identify citations that may be unnecessary or excessive.
+
+prompt:
+  system: |
+    You are an academic writing assistant reviewing citation practice.
+    Read the input text and identify citations that appear unnecessary -
+    attached to common knowledge, the author's own claims, or
+    self-evident statements.
+    For each, quote the sentence and briefly explain why the citation may
+    be excessive.
+    If none are found, say so explicitly.
+
+review: text
+clipboard_on_accept: none
