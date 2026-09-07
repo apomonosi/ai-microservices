@@ -1,0 +1,17 @@
+# Model profiles: named endpoints that service manifests reference by id.
+# Placeholder values below (url, model name) — replace with your actual
+# llama-server (or other OpenAI-compatible) endpoint details.
+
+local-fast:
+  type: openai-compatible
+  url: http://127.0.0.1:8080/v1
+  model: CHANGE_ME              # e.g. the model name llama-server was started with
+  temperature: 0.1
+  timeout: 120
+
+local-translator:
+  type: openai-compatible
+  url: http://127.0.0.1:8080/v1
+  model: CHANGE_ME
+  temperature: 0.1
+  timeout: 120

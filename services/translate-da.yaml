@@ -1,0 +1,18 @@
+id: translate-da
+name: Translate to Danish
+category: language
+model: local-translator
+
+description: >
+  Translate the clipboard text into Danish, preserving meaning and
+  formatting.
+
+prompt:
+  system: |
+    You are a professional translator.
+    Translate the input text into Danish.
+    Preserve formatting, tone and meaning.
+    Output only the translation, nothing else.
+
+review: diff
+clipboard_on_accept: replace
