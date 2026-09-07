@@ -8,34 +8,17 @@ from .clipboard import ClipboardError
 from .core import ConfigError, EngineError, list_services, load_service, run_service
 
 
-def cmd_run(args: argparse.Namespace) -> int:
-    try:
-        service = load_service(args.service_id)
-    except ConfigError as exc:
-        print(f"error: {exc}", file=sys.stderr)
-        return 1
-
+def _read_input(args: argparse.Namespace) -> str | None:
     if args.text is not None:
-        input_text = args.text
-    else:
-        try:
-            input_text = clipboard.read_text()
-        except ClipboardError as exc:
-            print(f"error: {exc}", file=sys.stderr)
-            return 1
-
-    if not input_text.strip():
-        print("error: no input text (clipboard/--text was empty)", file=sys.stderr)
-        return 1
-
+        return args.text
     try:
-        result = run_service(service, input_text)
-    except (ConfigError, EngineError) as exc:
+        return clipboard.read_text()
+    except ClipboardError as exc:
         print(f"error: {exc}", file=sys.stderr)
-        return 1
+        return None
 
-    print(result)
 
+def _run_headless(args: argparse.Namespace, service, result: str) -> int:
     if args.replace_clipboard:
         if service.clipboard_on_accept != "replace":
             print(
@@ -48,8 +31,60 @@ def cmd_run(args: argparse.Namespace) -> int:
             except ClipboardError as exc:
                 print(f"error: {exc}", file=sys.stderr)
                 return 1
-
     return 0
+
+
+def _run_with_review(service, input_text: str, result: str) -> int:
+    try:
+        from PySide6.QtWidgets import QApplication, QDialog
+
+        from .gui.result_inspector import ResultInspector
+    except ImportError:
+        print(
+            "error: the review UI requires PySide6 (pip install -r requirements.txt); "
+            "pass --no-gui to skip it",
+            file=sys.stderr,
+        )
+        return 1
+
+    app = QApplication.instance() or QApplication(sys.argv[:1])
+    dialog = ResultInspector(service, input_text, result)
+    outcome = dialog.exec()
+
+    if outcome == QDialog.DialogCode.Accepted and service.clipboard_on_accept == "replace":
+        try:
+            clipboard.write_text(result)
+        except ClipboardError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+    return 0
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    try:
+        service = load_service(args.service_id)
+    except ConfigError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    input_text = _read_input(args)
+    if input_text is None:
+        return 1
+    if not input_text.strip():
+        print("error: no input text (clipboard/--text was empty)", file=sys.stderr)
+        return 1
+
+    try:
+        result = run_service(service, input_text)
+    except (ConfigError, EngineError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(result)
+
+    if args.no_gui:
+        return _run_headless(args, service, result)
+    return _run_with_review(service, input_text, result)
 
 
 def cmd_list(args: argparse.Namespace) -> int:
@@ -66,13 +101,15 @@ def build_parser() -> argparse.ArgumentParser:
     run_p.add_argument("service_id")
     run_p.add_argument("--text", help="Use this text instead of reading the clipboard")
     run_p.add_argument(
+        "--no-gui",
+        action="store_true",
+        help="Skip the review dialog; just print the result (optionally with --replace-clipboard)",
+    )
+    run_p.add_argument(
         "--replace-clipboard",
         action="store_true",
-        help=(
-            "Write the result back to the clipboard if the service allows it. "
-            "No review step exists yet (Phase 2 adds one) — only pass this once "
-            "you're ready to trust the result unreviewed."
-        ),
+        help="With --no-gui: write the result to the clipboard unreviewed. Ignored otherwise "
+        "(the review dialog's Accept & Copy controls this instead).",
     )
     run_p.set_defaults(func=cmd_run)
 
