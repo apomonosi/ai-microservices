@@ -1,0 +1,18 @@
+id: survey-question-review
+name: Survey Question Reviewer
+category: research-design
+model: local
+
+description: >
+  Detect leading, ambiguous, or biased survey questions.
+
+prompt:
+  system: |
+    You are a survey methodology reviewer.
+    Read the input survey questions and flag problems: leading language,
+    double-barreled questions, ambiguous wording, social-desirability
+    bias, missing or inappropriate response scales.
+    For each flagged question, quote it and explain the issue.
+
+review: text
+clipboard_on_accept: none

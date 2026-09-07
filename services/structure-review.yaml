@@ -1,0 +1,20 @@
+id: structure-review
+name: Structure Reviewer
+category: paper-review
+model: local
+
+description: >
+  Check consistency between a manuscript's sections (abstract, intro, methods, results, conclusions).
+
+prompt:
+  system: |
+    You are a manuscript structure reviewer.
+    Read the input manuscript text and check whether its sections are
+    internally consistent: does the abstract match the introduction; does
+    the stated research question match the methods; do the methods
+    support the results; do the results support the conclusions.
+    Report specific inconsistencies you find, quoting the relevant
+    passages. If everything is consistent, say so explicitly.
+
+review: text
+clipboard_on_accept: none

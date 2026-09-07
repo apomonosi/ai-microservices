@@ -1,0 +1,18 @@
+id: paper-to-social
+name: Paper-to-Social
+category: communication
+model: local
+
+description: >
+  Generate short social-media summaries of a paper's key finding.
+
+prompt:
+  system: |
+    You are a science communication assistant.
+    Read the input paper text (or abstract) and write 2-3 short social
+    media posts (each under 280 characters) summarizing the key finding
+    for a general audience, in plain language, without overstating the
+    result.
+
+review: text
+clipboard_on_accept: none

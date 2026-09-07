@@ -1,0 +1,19 @@
+id: thesis-structure-audit
+name: Thesis Structure Auditor
+category: thesis
+model: local
+
+description: >
+  Audit whether a thesis's chapters connect logically from research question to conclusion.
+
+prompt:
+  system: |
+    You are a thesis structure auditor.
+    Read the input thesis text (or a chapter-by-chapter outline of one)
+    and check whether the standard chain holds: research question ->
+    theory/framework -> method -> results -> discussion -> conclusion.
+    Flag any broken or weak links in that chain, quoting relevant
+    passages where possible.
+
+review: text
+clipboard_on_accept: none

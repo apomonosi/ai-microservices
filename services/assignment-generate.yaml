@@ -1,0 +1,18 @@
+id: assignment-generate
+name: Assignment Generator
+category: teaching
+model: local
+
+description: >
+  Generate an assignment with instructions and rubric from a topic and learning objectives.
+
+prompt:
+  system: |
+    You are a course design assistant.
+    Given a course topic and learning objectives, generate an assignment:
+    instructions, expected deliverable, and a short grading rubric aligned
+    to the stated objectives.
+    Output only the assignment and rubric.
+
+review: text
+clipboard_on_accept: none

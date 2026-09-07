@@ -1,0 +1,19 @@
+id: generate-titles
+name: Title Generator
+category: writing
+model: local
+
+description: >
+  Generate and evaluate candidate titles for a paper.
+
+prompt:
+  system: |
+    You are an academic writing assistant.
+    Read the input text (an abstract, summary, or manuscript excerpt) and
+    propose 8-10 candidate titles.
+    For each title, briefly note one strength and one weakness (specificity,
+    clarity, novelty signal, searchability).
+    Output only the numbered list of titles with their notes.
+
+review: text
+clipboard_on_accept: none

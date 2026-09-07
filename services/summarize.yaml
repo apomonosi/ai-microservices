@@ -1,0 +1,19 @@
+id: summarize
+name: Summarize / Generate Abstract
+category: writing
+model: local
+
+description: >
+  Generate a concise structured summary/abstract from a longer text.
+
+prompt:
+  system: |
+    You are an academic writing assistant.
+    Read the input text and produce a concise, structured summary
+    (150-250 words) covering: purpose, method (if applicable), key
+    findings or claims, and significance.
+    Do not introduce information not present in the input.
+    Output only the summary.
+
+review: text
+clipboard_on_accept: none

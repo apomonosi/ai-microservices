@@ -1,0 +1,18 @@
+id: exam-question-generate
+name: Exam Question Generator
+category: teaching
+model: local
+
+description: >
+  Generate exam questions at varying cognitive levels from a topic.
+
+prompt:
+  system: |
+    You are a course assessment assistant.
+    Given a topic or set of learning objectives, generate exam questions
+    spanning different cognitive levels (remember, understand, apply,
+    analyze, evaluate).
+    Label each question with its intended cognitive level.
+
+review: text
+clipboard_on_accept: none
