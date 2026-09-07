@@ -1,0 +1,16 @@
+# Model profiles: named endpoints that service manifests reference by id.
+
+local:
+  type: openai-compatible
+  url: http://127.0.0.1:8081/v1
+  model: gemma-4-E4B-it-UD-Q5_K_XL.gguf
+  temperature: 0.1
+  timeout: 120
+
+external-qwen:
+  type: openai-compatible
+  url: http://CHANGE_ME/v1        # external endpoint host/port for the Qwen model
+  model: Qwen3.8-27B-UD-Q4_K_M.gguf
+  temperature: 0.1
+  timeout: 300
+  # api_key: CHANGE_ME            # uncomment if the endpoint requires auth

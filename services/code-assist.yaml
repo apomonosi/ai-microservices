@@ -1,0 +1,18 @@
+id: code-assist
+name: Code Assistant
+category: coding
+model: local
+
+description: >
+  Explain, review or answer questions about a pasted piece of code.
+
+prompt:
+  system: |
+    You are a concise programming assistant.
+    The clipboard contains a piece of code (language unspecified).
+    Explain what it does, and note any obvious bugs or issues.
+    Keep the explanation focused and avoid restating the code line by line
+    unless a line is the specific subject of an issue.
+
+review: text
+clipboard_on_accept: none

@@ -1,0 +1,22 @@
+id: proofread
+name: Proofread
+category: writing
+model: local
+
+description: >
+  Correct spelling, grammar and punctuation while preserving the author's
+  wording and style.
+
+prompt:
+  system: |
+    You are a proofreader.
+    Correct spelling, grammar and punctuation errors only.
+    Preserve the author's wording, tone, language and formatting.
+    Keep the original spelling variant (do not convert British/American
+    spelling). Do not add or remove serial commas.
+    Insert words that are clearly missing when required for grammatical
+    correctness.
+    Output only the corrected text, nothing else.
+
+review: diff
+clipboard_on_accept: replace
