@@ -1,0 +1,142 @@
+"""Service/model configuration loading and the OpenAI-compatible engine call.
+
+Services and model profiles are plain YAML data (see ../services/*.yaml and
+../models.yaml). This module never hard-codes a specific service — adding
+a new one is purely a matter of dropping in another YAML file.
+"""
+
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass
+from pathlib import Path
+
+import requests
+import yaml
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SERVICES_DIR = Path(os.environ.get("AI_ACTIONS_SERVICES_DIR", REPO_ROOT / "services"))
+MODELS_FILE = Path(os.environ.get("AI_ACTIONS_MODELS_FILE", REPO_ROOT / "models.yaml"))
+
+
+class ConfigError(RuntimeError):
+    """Missing or invalid service/model configuration."""
+
+
+class EngineError(RuntimeError):
+    """The model endpoint could not be reached or returned something unexpected."""
+
+
+@dataclass
+class ModelProfile:
+    name: str
+    url: str
+    model: str
+    temperature: float = 0.2
+    timeout: float = 120.0
+    api_key: str | None = None
+
+
+@dataclass
+class Service:
+    id: str
+    name: str
+    category: str
+    model: str
+    system_prompt: str
+    review: str = "text"
+    clipboard_on_accept: str = "none"
+    description: str = ""
+
+
+def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
+    if not path.exists():
+        raise ConfigError(f"Model profile file not found: {path}")
+    data = yaml.safe_load(path.read_text()) or {}
+    profiles: dict[str, ModelProfile] = {}
+    for name, cfg in data.items():
+        try:
+            profiles[name] = ModelProfile(
+                name=name,
+                url=cfg["url"],
+                model=cfg["model"],
+                temperature=cfg.get("temperature", 0.2),
+                timeout=cfg.get("timeout", 120),
+                api_key=cfg.get("api_key"),
+            )
+        except KeyError as exc:
+            raise ConfigError(f"Model profile '{name}' is missing required field {exc}") from exc
+    return profiles
+
+
+def _service_path(service_id: str, services_dir: Path) -> Path:
+    return services_dir / f"{service_id}.yaml"
+
+
+def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
+    path = _service_path(service_id, services_dir)
+    if not path.exists():
+        raise ConfigError(f"Unknown service '{service_id}' (expected {path})")
+    data = yaml.safe_load(path.read_text()) or {}
+    try:
+        system_prompt = data["prompt"]["system"]
+        model = data["model"]
+    except KeyError as exc:
+        raise ConfigError(f"Service '{service_id}' is missing required field {exc}") from exc
+    return Service(
+        id=data.get("id", service_id),
+        name=data.get("name", service_id),
+        category=data.get("category", ""),
+        model=model,
+        system_prompt=system_prompt,
+        review=data.get("review", "text"),
+        clipboard_on_accept=data.get("clipboard_on_accept", "none"),
+        description=(data.get("description") or "").strip(),
+    )
+
+
+def list_services(services_dir: Path = SERVICES_DIR) -> list[Service]:
+    return [load_service(path.stem, services_dir) for path in sorted(services_dir.glob("*.yaml"))]
+
+
+def run_service(
+    service: Service,
+    input_text: str,
+    models: dict[str, ModelProfile] | None = None,
+) -> str:
+    """Send input_text through the service's model profile and return the
+    model's reply text.
+    """
+    models = load_models() if models is None else models
+    if service.model not in models:
+        raise ConfigError(f"Service '{service.id}' references unknown model '{service.model}'")
+    profile = models[service.model]
+
+    payload = {
+        "model": profile.model,
+        "temperature": profile.temperature,
+        "messages": [
+            {"role": "system", "content": service.system_prompt},
+            {"role": "user", "content": input_text},
+        ],
+    }
+    headers = {"Content-Type": "application/json"}
+    if profile.api_key:
+        headers["Authorization"] = f"Bearer {profile.api_key}"
+
+    try:
+        response = requests.post(
+            f"{profile.url.rstrip('/')}/chat/completions",
+            json=payload,
+            headers=headers,
+            timeout=profile.timeout,
+        )
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise EngineError(f"Request to model endpoint '{profile.name}' ({profile.url}) failed: {exc}") from exc
+
+    data = response.json()
+    try:
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError) as exc:
+        raise EngineError(f"Unexpected response shape from '{profile.name}': {data}") from exc
