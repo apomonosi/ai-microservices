@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import sys
 
+from . import clipboard
+from .clipboard import ClipboardError
 from .core import ConfigError, EngineError, list_services, load_service, run_service
 
 
@@ -17,15 +19,9 @@ def cmd_run(args: argparse.Namespace) -> int:
         input_text = args.text
     else:
         try:
-            from . import clipboard
-
             input_text = clipboard.read_text()
-        except ImportError:
-            print(
-                "error: reading the clipboard requires PySide6 (pip install -r requirements.txt); "
-                "use --text to bypass the clipboard for now",
-                file=sys.stderr,
-            )
+        except ClipboardError as exc:
+            print(f"error: {exc}", file=sys.stderr)
             return 1
 
     if not input_text.strip():
@@ -48,14 +44,9 @@ def cmd_run(args: argparse.Namespace) -> int:
             )
         else:
             try:
-                from . import clipboard
-
                 clipboard.write_text(result)
-            except ImportError:
-                print(
-                    "error: writing the clipboard requires PySide6 (pip install -r requirements.txt)",
-                    file=sys.stderr,
-                )
+            except ClipboardError as exc:
+                print(f"error: {exc}", file=sys.stderr)
                 return 1
 
     return 0

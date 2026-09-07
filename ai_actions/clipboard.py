@@ -1,47 +1,62 @@
-"""System clipboard access via Qt's QClipboard.
+"""System clipboard access.
 
-PySide6 is imported lazily inside these functions so that the rest of the
-engine (config loading, the HTTP call, `ai-actions list`, `--text` input)
-works without PySide6 installed or a display available — useful for
-testing over SSH or in a headless environment. A real desktop session is
-only needed once you actually read/write the clipboard.
+Uses the Wayland clipboard CLI tools (wl-clipboard) on Wayland sessions and
+xclip on X11.
+
+Qt's QClipboard was tried first (per the original roadmap) but proved
+unreliable for a short-lived CLI process on Wayland/KDE Plasma: reading
+immediately after constructing QGuiApplication races the compositor's
+asynchronous clipboard-offer handshake, and with no event loop running in
+a one-shot process, it consistently returned empty text. wl-paste/wl-copy
+don't have this problem — they're what the original bash-script prototype
+already used successfully — so we use them here instead. wl-copy also
+self-daemonizes to keep serving the clipboard, which solves the "process
+must stay alive to be pasted from" problem more cleanly than manually
+delaying before exit.
+
+QClipboard is expected to become viable from Phase 2 onward, once
+ai-actions is a persistent Qt application with its own running event
+loop; revisit then if it's worth switching this module over.
 """
 
 from __future__ import annotations
 
-import sys
-import time
+import os
+import shutil
+import subprocess
 
 
-def _app():
-    from PySide6.QtGui import QGuiApplication
+class ClipboardError(RuntimeError):
+    """The clipboard could not be read or written."""
 
-    app = QGuiApplication.instance()
-    if app is None:
-        app = QGuiApplication(sys.argv[:1])
-    return app
+
+def _is_wayland() -> bool:
+    return bool(os.environ.get("WAYLAND_DISPLAY")) or os.environ.get("XDG_SESSION_TYPE") == "wayland"
+
+
+def _require(binary: str, package_hint: str) -> str:
+    path = shutil.which(binary)
+    if path is None:
+        raise ClipboardError(f"'{binary}' not found on PATH — install {package_hint}")
+    return path
 
 
 def read_text() -> str:
-    from PySide6.QtGui import QClipboard
+    if _is_wayland():
+        _require("wl-paste", "wl-clipboard")
+        result = subprocess.run(["wl-paste", "--no-newline"], capture_output=True, text=True)
+    else:
+        _require("xclip", "xclip")
+        result = subprocess.run(["xclip", "-selection", "clipboard", "-o"], capture_output=True, text=True)
+    # A non-text clipboard (or an empty one) makes both tools exit non-zero;
+    # treat that as "no text available" rather than an error.
+    return result.stdout if result.returncode == 0 else ""
 
-    app = _app()
-    return app.clipboard().text(QClipboard.Mode.Clipboard)
 
-
-def write_text(text: str, settle_seconds: float = 0.3) -> None:
-    """Write text to the system clipboard.
-
-    On X11/Wayland the clipboard content is served by the writing process
-    itself; a paste can fail if that process exits before the pasting
-    application requests the content. Processing events plus a short delay
-    before returning gives it time to do so. If this proves flaky in
-    practice, running a clipboard manager (e.g. Klipper) that grabs the
-    content immediately is the usual fix.
-    """
-    from PySide6.QtGui import QClipboard
-
-    app = _app()
-    app.clipboard().setText(text, QClipboard.Mode.Clipboard)
-    app.processEvents()
-    time.sleep(settle_seconds)
+def write_text(text: str) -> None:
+    if _is_wayland():
+        _require("wl-copy", "wl-clipboard")
+        subprocess.run(["wl-copy"], input=text, text=True, check=True)
+    else:
+        _require("xclip", "xclip")
+        subprocess.run(["xclip", "-selection", "clipboard"], input=text, text=True, check=True)
