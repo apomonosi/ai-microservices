@@ -17,6 +17,15 @@ from .core import (
     run_service,
     validate_services,
 )
+from .manage import (
+    ManageError,
+    create_service,
+    delete_service,
+    duplicate_service,
+    get_service_path,
+    open_editor,
+    set_field,
+)
 
 
 def _read_input(args: argparse.Namespace) -> str | None:
@@ -241,6 +250,136 @@ def cmd_service_validate(args: argparse.Namespace) -> int:
     return 1
 
 
+def _report_post_edit_validation(service_id: str) -> None:
+    """Give immediate feedback after create/duplicate/set/edit, since
+    those are exactly the operations most likely to introduce a typo or
+    an invalid field value."""
+    problems = validate_services(only_id=service_id)
+    if problems:
+        print(f"note: '{service_id}' has validation issues:", file=sys.stderr)
+        for problem in problems:
+            print(f"  - {problem}", file=sys.stderr)
+
+
+def cmd_service_create(args: argparse.Namespace) -> int:
+    prompt_text = ""
+    if args.prompt is not None:
+        prompt_text = args.prompt
+    elif args.prompt_file is not None:
+        try:
+            prompt_text = args.prompt_file.read_text()
+        except OSError as exc:
+            print(f"error: could not read --prompt-file '{args.prompt_file}': {exc}", file=sys.stderr)
+            return 1
+
+    try:
+        path = create_service(
+            args.service_id,
+            name=args.name,
+            category=args.category,
+            model=args.model,
+            review=args.review,
+            clipboard_on_accept=args.clipboard_on_accept,
+            description=args.description,
+            prompt=prompt_text,
+        )
+    except ManageError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"created {path}")
+    if not args.no_edit:
+        try:
+            open_editor(path)
+        except ManageError as exc:
+            print(f"note: {exc}", file=sys.stderr)
+    _report_post_edit_validation(args.service_id)
+    return 0
+
+
+def cmd_service_edit(args: argparse.Namespace) -> int:
+    path = get_service_path(args.service_id)
+    if not path.exists():
+        print(f"error: service '{args.service_id}' does not exist ({path})", file=sys.stderr)
+        return 1
+    try:
+        open_editor(path)
+    except ManageError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    _report_post_edit_validation(args.service_id)
+    return 0
+
+
+def cmd_service_set(args: argparse.Namespace) -> int:
+    fields = {
+        "name": args.name,
+        "category": args.category,
+        "model": args.model,
+        "review": args.review,
+        "clipboard_on_accept": args.clipboard_on_accept,
+    }
+    fields = {field: value for field, value in fields.items() if value is not None}
+    if not fields:
+        print(
+            "error: no fields given (use --name/--category/--model/--review/--clipboard-on-accept)",
+            file=sys.stderr,
+        )
+        return 1
+
+    try:
+        for field, value in fields.items():
+            set_field(args.service_id, field, value)
+    except ManageError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"updated {args.service_id}: {', '.join(fields)}")
+    _report_post_edit_validation(args.service_id)
+    return 0
+
+
+def cmd_service_duplicate(args: argparse.Namespace) -> int:
+    try:
+        path = duplicate_service(args.source_id, args.new_id, name=args.name)
+    except ManageError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"created {path} (copied from '{args.source_id}')")
+    if not args.no_edit:
+        try:
+            open_editor(path)
+        except ManageError as exc:
+            print(f"note: {exc}", file=sys.stderr)
+    _report_post_edit_validation(args.new_id)
+    return 0
+
+
+def cmd_service_delete(args: argparse.Namespace) -> int:
+    path = get_service_path(args.service_id)
+    if not path.exists():
+        print(f"error: service '{args.service_id}' does not exist ({path})", file=sys.stderr)
+        return 1
+
+    if not args.yes:
+        try:
+            answer = input(f"Delete {path}? [y/N] ")
+        except EOFError:
+            answer = ""
+        if answer.strip().lower() != "y":
+            print("cancelled", file=sys.stderr)
+            return 1
+
+    try:
+        delete_service(args.service_id)
+    except ManageError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    print(f"deleted {path}")
+    return 0
+
+
 def _add_execution_args(parser: argparse.ArgumentParser) -> None:
     input_group = parser.add_mutually_exclusive_group()
     input_group.add_argument("--text", help="Use this text instead of reading the clipboard")
@@ -308,6 +447,56 @@ def build_parser() -> argparse.ArgumentParser:
     )
     svc_validate_p.add_argument("service_id", nargs="?", help="Validate only this service (default: all)")
     svc_validate_p.set_defaults(func=cmd_service_validate)
+
+    svc_create_p = service_sub.add_parser("create", help="Create a new service manifest")
+    svc_create_p.add_argument("service_id")
+    svc_create_p.add_argument("--name", help="Default: title-cased service id")
+    svc_create_p.add_argument("--category", default="general")
+    svc_create_p.add_argument("--model", default="local")
+    svc_create_p.add_argument("--review", choices=["diff", "text"], default="text")
+    svc_create_p.add_argument(
+        "--clipboard-on-accept",
+        dest="clipboard_on_accept",
+        choices=["replace", "none"],
+        help="Default: 'replace' for --review diff, 'none' for --review text",
+    )
+    svc_create_p.add_argument("--description", default="")
+    prompt_group = svc_create_p.add_mutually_exclusive_group()
+    prompt_group.add_argument("--prompt", help="The system prompt text")
+    prompt_group.add_argument("--prompt-file", type=Path, metavar="PATH", help="Read the system prompt from a file")
+    svc_create_p.add_argument(
+        "--no-edit", action="store_true", help="Do not open $EDITOR on the new file afterward"
+    )
+    svc_create_p.set_defaults(func=cmd_service_create)
+
+    svc_edit_p = service_sub.add_parser("edit", help="Open an existing service's manifest in $EDITOR")
+    svc_edit_p.add_argument("service_id")
+    svc_edit_p.set_defaults(func=cmd_service_edit)
+
+    svc_set_p = service_sub.add_parser(
+        "set", help="Update simple fields on an existing service without opening an editor"
+    )
+    svc_set_p.add_argument("service_id")
+    svc_set_p.add_argument("--name")
+    svc_set_p.add_argument("--category")
+    svc_set_p.add_argument("--model")
+    svc_set_p.add_argument("--review", choices=["diff", "text"])
+    svc_set_p.add_argument("--clipboard-on-accept", dest="clipboard_on_accept", choices=["replace", "none"])
+    svc_set_p.set_defaults(func=cmd_service_set)
+
+    svc_dup_p = service_sub.add_parser("duplicate", help="Copy an existing service under a new id")
+    svc_dup_p.add_argument("source_id")
+    svc_dup_p.add_argument("new_id")
+    svc_dup_p.add_argument("--name", help="Default: keep the source's name")
+    svc_dup_p.add_argument(
+        "--no-edit", action="store_true", help="Do not open $EDITOR on the new file afterward"
+    )
+    svc_dup_p.set_defaults(func=cmd_service_duplicate)
+
+    svc_del_p = service_sub.add_parser("delete", help="Delete a service manifest")
+    svc_del_p.add_argument("service_id")
+    svc_del_p.add_argument("--yes", action="store_true", help="Skip the confirmation prompt")
+    svc_del_p.set_defaults(func=cmd_service_delete)
 
     return parser
 
