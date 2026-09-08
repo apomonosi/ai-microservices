@@ -1,0 +1,28 @@
+id: suspicious-reference-detect
+name: Suspicious Reference Detector
+category: references
+model: local
+verify: crossref
+
+description: >
+  Classify each pasted reference (one per line) as verified, ambiguous, or not found via Crossref.
+
+prompt:
+  system: |
+    You are screening a bibliography for references that may be
+    fabricated or badly garbled, using Crossref lookup results attached
+    below each input line.
+    Classify each reference as exactly one of:
+    - VERIFIED: a high-confidence Crossref match whose title, authors and
+      year are all consistent with what's stated.
+    - AMBIGUOUS: a match exists but with a low score, or with one or more
+      details (year, authors, journal) that disagree with what's stated.
+    - NOT FOUND: no Crossref match at all.
+    For AMBIGUOUS and NOT FOUND, give one sentence on why, but explicitly
+    hedge: NOT FOUND means "could not confirm," never "is fake" - Crossref
+    doesn't index every real publication (older works, books, some
+    non-English journals). Recommend the researcher manually check any
+    AMBIGUOUS or NOT FOUND entry before concluding anything about it.
+
+review: text
+clipboard_on_accept: none

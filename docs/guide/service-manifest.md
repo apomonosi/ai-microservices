@@ -37,6 +37,7 @@ clipboard_on_accept: replace
 | `description` | no | One line, shown in `list`/`show`/the generated [service catalog](../services/index.md). |
 | `review` | no (default `text`) | `diff` — word-level diff view, Accept/Reject. `text` — read-only view, manual Copy button. Anything else fails `validate`. |
 | `clipboard_on_accept` | no (default `none`) | `replace` — Accept writes the result to the clipboard. `none` — it doesn't (still copyable manually in `review: text` mode). Anything else fails `validate`. |
+| `verify` | no (default none) | `crossref` — resolve each input line against Crossref before the model call (see below). Anything else fails `validate`. |
 
 ## Choosing `review`/`clipboard_on_accept`
 
@@ -74,3 +75,30 @@ The services in this repo follow a few conventions worth keeping:
 `model: local` looks up `local:` in `models.yaml`. `service show <id>`
 resolves and displays this for you; `service validate` flags it if the
 name doesn't exist.
+
+## `verify: crossref`
+
+Set this when the service needs to check pasted references against a
+real bibliographic database rather than relying on the model's own
+(unreliable) recollection of what exists. Before the model is called,
+`ai_actions.verify.resolve_references()` treats the input as **one
+reference per line**, looks each one up against
+[Crossref](https://api.crossref.org)'s public `works` API, and appends a
+`CROSSREF LOOKUP RESULTS` block to the input the model sees — the
+model's job is to reason over that block, not to invent metadata itself.
+A per-line lookup failure (no network, no match, an ambiguous result)
+never aborts the run; it just shows up as `lookup_failed`/`no_match` for
+that one line, and the prompt should tell the model how to talk about
+that (see `services/reference-check.yaml` for the pattern: a miss is
+"could not verify," never "is fake").
+
+This is the one case in the whole engine where running a service means
+something other than the pasted text reaching only your configured model
+endpoint — each reference line is also sent to Crossref's public API. See
+[Do you need the cloud?](../local-models.md) for what that means in
+practice, and `service show <id>` prints a `verify:` line as a heads-up
+before you run one.
+
+An optional `AI_ACTIONS_CONTACT_EMAIL` environment variable gets sent to
+Crossref as a courtesy identifier (their "polite pool," for more reliable
+service) — see [Install](../install.md).

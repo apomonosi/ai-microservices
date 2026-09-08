@@ -1,0 +1,29 @@
+id: reference-check
+name: Reference Checker
+category: references
+model: local
+verify: crossref
+
+description: >
+  Check whether each pasted reference (one per line) resolves to a real, matching publication.
+
+prompt:
+  system: |
+    You are checking a bibliography for accuracy against Crossref lookup
+    results, one reference per input line.
+    For each line, compare what the reference *states* (title, authors,
+    year, journal) against what Crossref *resolved* for it, given below
+    each line as a CROSSREF LOOKUP RESULTS block:
+    - If they clearly match, say so briefly.
+    - If they clearly disagree (wrong year, wrong journal, mismatched
+      authors), flag exactly what disagrees, quoting both the stated and
+      resolved value.
+    - If there's no confident match (no result, or a low match score),
+      say the reference could not be verified - do not claim it is wrong
+      or fabricated. Many real works, especially books, older articles,
+      or non-English publications, simply aren't in Crossref.
+    Never state a reference is definitely fake; only report what could
+    and could not be confirmed, and let the researcher judge the rest.
+
+review: text
+clipboard_on_accept: none

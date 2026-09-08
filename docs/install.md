@@ -46,6 +46,21 @@ local:
 Every service references a profile here by name (`model: local`). See
 [Model profiles](guide/models.md) for the full field list.
 
+## (Optional) identify yourself to Crossref
+
+The three reference-verification services
+([`reference-check`](guide/service-manifest.md#verify-crossref) and
+friends — see [Do you need the cloud?](local-models.md)) look references
+up against Crossref's public API. Setting an environment variable puts
+you in Crossref's "polite pool" (their term), which gets more reliable
+service than anonymous requests:
+
+```bash
+export AI_ACTIONS_CONTACT_EMAIL="you@example.com"
+```
+
+Entirely optional, and irrelevant to every other service in the catalog.
+
 ## Clipboard tooling
 
 On Wayland, `ai-actions` shells out to `wl-clipboard` (`wl-paste`/`wl-copy`);

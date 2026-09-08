@@ -1,7 +1,7 @@
 # Examples
 
-Four real workflows, each a variation on the same shape: text in, a
-service, text out. See [CLI reference](guide/cli.md) for every flag and
+Real workflows, each a variation on the same shape: text in, a service,
+text out. See [CLI reference](guide/cli.md) for every flag and
 [Pipelines](guide/pipelines.md) for the `--file`/`--stdin`/`--output`
 mechanics these build on.
 
@@ -77,12 +77,36 @@ pass inline; for anything longer, drop it and refine the prompt in your
 editor before the first real run. See [Creating services](guide/creating-services.md)
 for the rest of the lifecycle — duplicating, adjusting fields, deleting.
 
+## Check a bibliography against a real database
+
+Unlike every other service, [`reference-check`](services/reference-check.md)
+talks to Crossref's public API as well as your local model — see [Do you
+need the cloud?](local-models.md#the-exception-three-services-that-do-talk-to-the-network).
+Paste one reference per line, real ones and a fabricated one included:
+
+```bash
+ai-actions run reference-check --text "$(cat <<'EOF'
+Vaswani et al., Attention is all you need, 2017
+Smith and Jones, A Totally Fabricated Study of Nothing in Particular, Journal of Made-Up Results, 2099
+EOF
+)" --no-gui
+```
+
+The first line resolves cleanly against Crossref's records; the second
+won't — and the output says so as "could not verify," not "is fake":
+Crossref not finding something is evidence of absence at best, never
+proof. `service show reference-check` prints a `verify:` line up front so
+this is never a surprise. `doi-resolve` and
+[`suspicious-reference-detect`](services/suspicious-reference-detect.md)
+run the same lookup, framed as a plain metadata report and a
+verified/ambiguous/not-found classification respectively.
+
 ## Not sure which service you want?
 
 ```bash
 ai-actions picker --file manuscript.md --output result.txt
 ```
 
-Search-as-you-type over all [55 services](services/index.md), then the
+Search-as-you-type over all [58 services](services/index.md), then the
 same review step as `run` — just with the choice of *what* to run made
 interactively instead of on the command line.
