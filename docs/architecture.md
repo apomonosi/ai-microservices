@@ -6,20 +6,14 @@ Services are declarative YAML, not code. One generic engine loads a
 manifest, sends a request, and hands the result to a review UI — adding a
 service means adding a file, never touching the engine.
 
-```
-Clipboard/--file/--stdin
-        │
-        ▼
-  Service manifest (services/<id>.yaml)
-        │
-        ▼
-  Model profile (models.yaml)  →  OpenAI-compatible endpoint
-        │
-        ▼
-  Result Inspector (review: diff | text)
-        │
-   Accept ──────────► Clipboard / --output file
-   Reject ──────────► nothing written
+```mermaid
+flowchart TD
+    input["Clipboard / --file / --stdin"] --> manifest["Service manifest (services/*.yaml)"]
+    manifest --> profile["Model profile (models.yaml)"]
+    profile --> endpoint["OpenAI-compatible endpoint"]
+    endpoint --> review["Result Inspector (review: diff | text)"]
+    review -->|Accept| written["Clipboard / --output file"]
+    review -->|Reject| nothing["nothing written"]
 ```
 
 ## Module layout
