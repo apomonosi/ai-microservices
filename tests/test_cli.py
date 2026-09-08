@@ -14,9 +14,12 @@ test of what a user actually runs.
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 from tests.helpers import write_service_file
 
@@ -240,3 +243,28 @@ def test_service_set_end_to_end(services_dir, models_file):
     assert result.returncode == 0
     content = (services_dir / "svc.yaml").read_text()
     assert "category: new" in content
+
+
+# --- installed console-script entry point -----------------------------------------------------------
+
+
+@pytest.mark.skipif(shutil.which("ai-actions") is None, reason="ai-actions not on PATH (package not installed)")
+def test_installed_console_script_matches_python_dash_m(services_dir, models_file):
+    """`pip install -e .` registers an `ai-actions` command (see
+    pyproject.toml's [project.scripts]) as a shortcut for `python -m
+    ai_actions`. Confirm the installed entry point actually resolves and
+    behaves identically, not just the module form every other test here
+    uses.
+    """
+    write_service_file(services_dir, "alpha", category="writing")
+    env = {
+        **os.environ,
+        "AI_ACTIONS_SERVICES_DIR": str(services_dir),
+        "AI_ACTIONS_MODELS_FILE": str(models_file),
+    }
+
+    installed = subprocess.run(["ai-actions", "list"], env=env, capture_output=True, text=True, timeout=30)
+    module_form = run_cli(["list"], services_dir, models_file)
+
+    assert installed.returncode == 0
+    assert installed.stdout == module_form.stdout

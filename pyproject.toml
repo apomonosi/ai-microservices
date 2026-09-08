@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-actions"
+version = "0.1.0"
+description = "A YAML-driven engine for running AI microservices against an OpenAI-compatible endpoint."
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6",
+    "PyYAML",
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+ai-actions = "ai_actions.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["ai_actions*"]
