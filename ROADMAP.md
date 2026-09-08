@@ -165,6 +165,14 @@ and they've been built:
   widgets. Run with `pytest` after `pip install -r requirements-dev.txt`.
 - **CI**: `.github/workflows/tests.yml` runs the full suite (GUI tests
   included, via a headless Qt platform) on every push and pull request.
+- **Installable CLI**: `pyproject.toml` registers `ai-actions` as a real
+  console-script entry point (`pipx install -e .` or `pip install -e .`),
+  so the command is just `ai-actions run proofread` — no more `python3 -m
+  ai_actions`, though that still works identically. Deliberately an
+  *editable* install, not a real one: `services/*.yaml`/`models.yaml` are
+  hand-edited data that live in this checkout, not files a normal install
+  would bundle into site-packages, so the installed command needs to keep
+  pointing back at the real checkout.
 
 ## Growing the service library
 
