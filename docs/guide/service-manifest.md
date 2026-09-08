@@ -1,0 +1,76 @@
+# Service manifest
+
+Every service is one file, `services/<id>.yaml`. This is the actual
+schema `ai_actions.core.load_service()` reads — not a separate
+description of it, so it can't drift.
+
+```yaml
+id: proofread
+name: Proofread
+category: writing
+model: local
+
+description: >
+  Correct spelling, grammar and punctuation while preserving the
+  author's wording and style.
+
+prompt:
+  system: |
+    You are a proofreader.
+    Correct spelling, grammar and punctuation errors only.
+    Preserve the author's wording, tone, language and formatting.
+    Output only the corrected text.
+
+review: diff
+clipboard_on_accept: replace
+```
+
+## Fields
+
+| Field | Required | Meaning |
+|---|---|---|
+| `id` | yes | Must match the filename (`<id>.yaml`) — `service validate` checks this. |
+| `name` | yes | Display name, shown in `list`/`picker`/the review dialog title. |
+| `category` | yes | Free-text grouping, used by `list --category` and the picker's icon lookup. Run `service categories` to see what's already in use before inventing a new one. |
+| `model` | yes | A profile name from `models.yaml` (see [Model profiles](models.md)). `service validate` flags a reference that doesn't resolve. |
+| `prompt.system` | yes | The system prompt sent with every request. This is the entire behavior of the service — see below for what makes one good. |
+| `description` | no | One line, shown in `list`/`show`/the generated [service catalog](../services/index.md). |
+| `review` | no (default `text`) | `diff` — word-level diff view, Accept/Reject. `text` — read-only view, manual Copy button. Anything else fails `validate`. |
+| `clipboard_on_accept` | no (default `none`) | `replace` — Accept writes the result to the clipboard. `none` — it doesn't (still copyable manually in `review: text` mode). Anything else fails `validate`. |
+
+## Choosing `review`/`clipboard_on_accept`
+
+Use `review: diff` + `clipboard_on_accept: replace` when the output is a
+**revision of the input** you'd plausibly want to paste back over it
+(proofread, style rewrites, tone fixes) — comparable length and shape to
+the input.
+
+Use `review: text` + `clipboard_on_accept: none` for anything that
+**produces something new** rather than revising the input — a summary, a
+review, extracted action items, generated questions. A diff between a
+full paper and a 150-word abstract of it isn't meaningful; showing the
+result plainly with a manual Copy button is.
+
+## Writing a good prompt
+
+The services in this repo follow a few conventions worth keeping:
+
+- State the role in one line ("You are a proofreader.").
+- Give concrete, checkable instructions rather than vague ones ("Correct
+  spelling, grammar and punctuation errors only" rather than "improve the
+  writing").
+- Say explicitly what *not* to do when it matters ("Do not add or remove
+  serial commas", "Do not overstate the findings beyond what the text
+  supports").
+- End generative/rewrite prompts with `Output only the result` — the
+  engine sends the model's reply as-is; without this it tends to add
+  preamble ("Here's the corrected text:").
+- For anything with a real-world consequence (statistical/methodology
+  advice, disclosures), say plainly that it's advisory and doesn't replace
+  a qualified human.
+
+## Model reference resolution
+
+`model: local` looks up `local:` in `models.yaml`. `service show <id>`
+resolves and displays this for you; `service validate` flags it if the
+name doesn't exist.

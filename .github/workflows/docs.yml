@@ -1,0 +1,26 @@
+name: Docs
+
+"on":
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-docs.txt
+
+      - name: Build docs
+        env:
+          DISABLE_MKDOCS_2_WARNING: "true"
+        run: mkdocs build --strict

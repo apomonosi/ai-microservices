@@ -1,0 +1,57 @@
+site_name: ai-actions
+site_url: https://apomonosi.github.io/ai-microservices/
+repo_url: https://github.com/apomonosi/ai-microservices
+repo_name: apomonosi/ai-microservices
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.sections
+    - content.code.copy
+    - search.suggest
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_service_docs.py
+
+markdown_extensions:
+  - fenced_code
+  - tables
+  - admonition
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Guide:
+      - CLI reference: guide/cli.md
+      - Service manifest: guide/service-manifest.md
+      - Creating services: guide/creating-services.md
+      - Pipelines: guide/pipelines.md
+      - Model profiles: guide/models.md
+  - Service catalog: services/index.md
+  - Architecture: architecture.md
+  - Roadmap: roadmap.md
+
+# mkdocs serve only watches docs_dir by default; these are the real sources
+# the generated services/ pages and several guide pages are derived from.
+watch:
+  - services
+  - models.yaml
+  - ai_actions
+  - scripts
