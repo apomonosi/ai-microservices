@@ -4,8 +4,8 @@
 
 The original brainstorm in `ai-microservices.plan.md` proposed a C++/Qt6/KDE
 Frameworks 6 desktop application (KGlobalAccel, KDBusService, Kirigami/QML,
-CMake) as the production architecture for turning the 145 services in
-`ai-microservices.tables.md` into a KDE-native AI action platform.
+CMake) as the production architecture for turning the 145 services now
+tracked in `docs/catalog.md` into a KDE-native AI action platform.
 
 After reflection, that plan is oversized for the actual goal:
 
@@ -177,8 +177,8 @@ and they've been built:
 ## Growing the service library
 
 Growing the catalog is just adding YAML files — no engine changes needed.
-Pull from `ai-microservices.tables.md` opportunistically; it's a backlog,
-not a deliverable, and there's no fixed target count. As of this writing the
+Pull from `docs/catalog.md` opportunistically; it's a backlog, not a
+deliverable, and there's no fixed target count. As of this writing the
 library has 51 services, added in two batches using a consistent rule for
 what qualifies as "just a YAML file" versus a separate mini-project:
 
