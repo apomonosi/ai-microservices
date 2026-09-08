@@ -15,6 +15,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest"]
+docs = ["mkdocs", "mkdocs-material", "mkdocs-gen-files"]
 
 [project.scripts]
 ai-actions = "ai_actions.cli:main"
