@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from . import clipboard
 from .clipboard import ClipboardError
@@ -11,6 +12,14 @@ from .core import ConfigError, EngineError, Service, list_services, load_service
 def _read_input(args: argparse.Namespace) -> str | None:
     if args.text is not None:
         return args.text
+    if args.file is not None:
+        try:
+            return args.file.read_text()
+        except OSError as exc:
+            print(f"error: could not read --file '{args.file}': {exc}", file=sys.stderr)
+            return None
+    if args.stdin:
+        return sys.stdin.read()
     try:
         return clipboard.read_text()
     except ClipboardError as exc:
@@ -18,7 +27,21 @@ def _read_input(args: argparse.Namespace) -> str | None:
         return None
 
 
+def _write_output_file(args: argparse.Namespace, result: str) -> int:
+    try:
+        args.output.write_text(result)
+    except OSError as exc:
+        print(f"error: could not write --output '{args.output}': {exc}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def _run_headless(args: argparse.Namespace, service: Service, result: str) -> int:
+    ok = True
+
+    if args.output is not None:
+        ok = _write_output_file(args, result) == 0 and ok
+
     if args.replace_clipboard:
         if service.clipboard_on_accept != "replace":
             print(
@@ -30,11 +53,12 @@ def _run_headless(args: argparse.Namespace, service: Service, result: str) -> in
                 clipboard.write_text(result)
             except ClipboardError as exc:
                 print(f"error: {exc}", file=sys.stderr)
-                return 1
-    return 0
+                ok = False
+
+    return 0 if ok else 1
 
 
-def _run_with_review(service: Service, input_text: str, result: str) -> int:
+def _run_with_review(args: argparse.Namespace, service: Service, input_text: str, result: str) -> int:
     try:
         from PySide6.QtWidgets import QApplication, QDialog
 
@@ -51,13 +75,17 @@ def _run_with_review(service: Service, input_text: str, result: str) -> int:
     dialog = ResultInspector(service, input_text, result)
     outcome = dialog.exec()
 
-    if outcome == QDialog.DialogCode.Accepted and service.clipboard_on_accept == "replace":
-        try:
-            clipboard.write_text(result)
-        except ClipboardError as exc:
-            print(f"error: {exc}", file=sys.stderr)
-            return 1
-    return 0
+    ok = True
+    if outcome == QDialog.DialogCode.Accepted:
+        if service.clipboard_on_accept == "replace":
+            try:
+                clipboard.write_text(result)
+            except ClipboardError as exc:
+                print(f"error: {exc}", file=sys.stderr)
+                ok = False
+        if args.output is not None:
+            ok = _write_output_file(args, result) == 0 and ok
+    return 0 if ok else 1
 
 
 def _execute_service(args: argparse.Namespace, service: Service) -> int:
@@ -69,7 +97,7 @@ def _execute_service(args: argparse.Namespace, service: Service) -> int:
     if input_text is None:
         return 1
     if not input_text.strip():
-        print("error: no input text (clipboard/--text was empty)", file=sys.stderr)
+        print("error: no input text (clipboard/--text/--file/--stdin was empty)", file=sys.stderr)
         return 1
 
     try:
@@ -82,7 +110,7 @@ def _execute_service(args: argparse.Namespace, service: Service) -> int:
 
     if args.no_gui:
         return _run_headless(args, service, result)
-    return _run_with_review(service, input_text, result)
+    return _run_with_review(args, service, input_text, result)
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -123,11 +151,19 @@ def cmd_list(args: argparse.Namespace) -> int:
 
 
 def _add_execution_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--text", help="Use this text instead of reading the clipboard")
+    input_group = parser.add_mutually_exclusive_group()
+    input_group.add_argument("--text", help="Use this text instead of reading the clipboard")
+    input_group.add_argument("--file", type=Path, metavar="PATH", help="Read input from this file")
+    input_group.add_argument(
+        "--stdin", action="store_true", help="Read input from stdin (for piping: `cat x | ai-actions run ...`)"
+    )
+    parser.add_argument(
+        "--output", type=Path, metavar="PATH", help="Also write the result to this file (for piping onward)"
+    )
     parser.add_argument(
         "--no-gui",
         action="store_true",
-        help="Skip the review dialog; just print the result (optionally with --replace-clipboard)",
+        help="Skip the review dialog; just print/write the result (optionally with --replace-clipboard)",
     )
     parser.add_argument(
         "--replace-clipboard",
@@ -141,7 +177,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ai-actions")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    run_p = sub.add_parser("run", help="Run a service against clipboard or --text input")
+    run_p = sub.add_parser("run", help="Run a service against clipboard, --file, --stdin or --text input")
     run_p.add_argument("service_id")
     _add_execution_args(run_p)
     run_p.set_defaults(func=cmd_run)
