@@ -56,7 +56,12 @@ def read_text() -> str:
 def write_text(text: str) -> None:
     if _is_wayland():
         _require("wl-copy", "wl-clipboard")
-        subprocess.run(["wl-copy"], input=text, text=True, check=True)
+        command = ["wl-copy"]
     else:
         _require("xclip", "xclip")
-        subprocess.run(["xclip", "-selection", "clipboard"], input=text, text=True, check=True)
+        command = ["xclip", "-selection", "clipboard"]
+    try:
+        subprocess.run(command, input=text, text=True, check=True, capture_output=True)
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        raise ClipboardError(f"'{command[0]}' failed" + (f": {stderr}" if stderr else "")) from exc
