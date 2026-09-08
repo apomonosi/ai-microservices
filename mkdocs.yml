@@ -41,6 +41,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Do you need the cloud?: local-models.md
   - Install: install.md
   - Examples: examples.md
   - Guide:

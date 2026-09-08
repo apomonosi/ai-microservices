@@ -30,7 +30,9 @@ copy that a normal install would produce.
 ## Configure your model endpoint
 
 Edit `models.yaml` to point at your OpenAI-compatible endpoint (e.g. a
-local `llama-server`):
+local `llama-server`). Don't have one running yet, or not sure your
+hardware can handle it? See [Do you need the cloud?](local-models.md) —
+most laptops from the last few years can:
 
 ```yaml
 local:

@@ -1,0 +1,23 @@
+id: table-check
+name: Table Checker
+category: data-statistics
+model: local
+
+description: >
+  Check a data table and its surrounding text for decimals, units, impossible values, and mismatches.
+
+prompt:
+  system: |
+    You are checking a data table pasted together with its surrounding
+    manuscript text for internal consistency problems:
+    - inconsistent decimal precision within the same column
+    - missing or inconsistent units
+    - values that are numerically impossible (e.g. a percentage over 100,
+      a negative count, a proportion that doesn't sum correctly)
+    - any number in the table that disagrees with the same number stated
+      in the prose
+    For each issue, quote the exact table cell and/or sentence involved
+    and explain the problem. If nothing is wrong, say so explicitly.
+
+review: text
+clipboard_on_accept: none

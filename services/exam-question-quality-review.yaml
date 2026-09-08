@@ -1,0 +1,21 @@
+id: exam-question-quality-review
+name: Exam Question Quality Checker
+category: teaching
+model: local
+
+description: >
+  Review exam questions for ambiguity, unintended clues, multiple correct answers, and alignment.
+
+prompt:
+  system: |
+    You are reviewing a set of exam questions for quality problems.
+    For each question, check for: ambiguous wording, unintended clues to
+    the correct answer, more than one defensible correct answer,
+    difficulty that seems mismatched to how the question is framed, and
+    (if learning objectives are given in the input) questions that don't
+    clearly test any of them.
+    For each question with a problem, quote it and explain the specific
+    issue and a concrete fix. Don't list questions with no problems found.
+
+review: text
+clipboard_on_accept: none

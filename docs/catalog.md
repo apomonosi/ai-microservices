@@ -74,13 +74,13 @@ for what that implies about which model backs which service.
 | 54 | Research Design | Survey Question Reviewer | Detect poor/biased/ambiguous questions | ✅ Done | [`survey-question-review`](services/survey-question-review.md) |
 | 55 | Research Design | Interview Guide Reviewer | Evaluate interview questions | ⬜ Not started |  |
 | 56 | Research Design | Qualitative Coding Assistant | Suggest codes and themes | ✅ Done | [`qualitative-coding-assist`](services/qualitative-coding-assist.md) |
-| 57 | Research Design | Codebook Generator | Generate candidate qualitative codebooks | ⬜ Not started |  |
+| 57 | Research Design | Codebook Generator | Generate candidate qualitative codebooks | ✅ Done | [`codebook-generate`](services/codebook-generate.md) |
 | 58 | Data & Statistics | Statistical Method Selector | Match research questions to methods | ✅ Done | [`statistical-method-select`](services/statistical-method-select.md) |
 | 59 | Coding | Code Assistant | Generate/explain research code | ✅ Done | [`code-assist`](services/code-assist.md) |
 | 60 | Coding | Code Reviewer | Review Python/R/other research code | ✅ Done | [`review-code`](services/review-code.md) |
 | 61 | Coding | Jupyter Notebook Auditor | Check reproducibility and notebook quality | ✅ Done | [`notebook-audit`](services/notebook-audit.md) |
 | 62 | Data & Statistics | Statistical Interpretation Checker | Compare statistical output with interpretation | ✅ Done | [`statistical-interpretation-check`](services/statistical-interpretation-check.md) |
-| 63 | Data & Statistics | Table Checker | Check tables against manuscript text | ⬜ Not started |  |
+| 63 | Data & Statistics | Table Checker | Check tables against manuscript text | ✅ Done | [`table-check`](services/table-check.md) |
 | 64 | Data & Statistics | Figure Caption Generator | Generate scientific figure captions | ⬜ Not started |  |
 | 65 | Data & Statistics | Numerical Consistency Checker | Find inconsistent numbers across documents | ✅ Done | [`numerical-consistency-check`](services/numerical-consistency-check.md) |
 | 66 | Research Integrity | Research Integrity Preflight | Comprehensive integrity audit | ⬜ Not started |  |
@@ -95,7 +95,7 @@ for what that implies about which model backs which service.
 | 75 | Teaching | Rubric Generator | Generate assessment rubrics | ⬜ Not started |  |
 | 76 | Teaching | Rubric Consistency Checker | Check rubric against assignment/objectives | ⬜ Not started |  |
 | 77 | Teaching | Exam Question Generator | Generate questions by difficulty/cognitive level | ✅ Done | [`exam-question-generate`](services/exam-question-generate.md) |
-| 78 | Teaching | Exam Question Quality Checker | Detect ambiguity and quality problems | ⬜ Not started |  |
+| 78 | Teaching | Exam Question Quality Checker | Detect ambiguity and quality problems | ✅ Done | [`exam-question-quality-review`](services/exam-question-quality-review.md) |
 | 79 | Teaching | Student Feedback Generator | Generate formative feedback | ✅ Done | [`student-feedback-generate`](services/student-feedback-generate.md) |
 | 80 | Teaching | Socratic Tutor | Guide students through questions | ⬜ Not started |  |
 | 81 | Teaching | Misconception Detector | Identify conceptual misunderstandings | ✅ Done | [`misconception-detect`](services/misconception-detect.md) |
@@ -117,7 +117,7 @@ for what that implies about which model backs which service.
 | 97 | Grants | Funding Opportunity Matcher | Match researchers to funding calls | ⬜ Not started |  |
 | 98 | Research Management | Research Meeting Summarizer | Summarize scientific meetings | ✅ Done | [`meeting-summarize`](services/meeting-summarize.md) |
 | 99 | Research Management | Meeting-to-Action-Items | Extract decisions, owners and deadlines | ✅ Done | [`meeting-action-items`](services/meeting-action-items.md) |
-| 100 | Research Management | Research Risk Register | Identify project risks | ⬜ Not started |  |
+| 100 | Research Management | Research Risk Register | Identify project risks | ✅ Done | [`research-risk-register`](services/research-risk-register.md) |
 | 101 | Research Management | Milestone Health Checker | Identify project delays/issues | ⬜ Not started |  |
 | 102 | Knowledge | Department Knowledge Assistant | Q&A over department documents | ⬜ Not started |  |
 | 103 | Knowledge | Lab Knowledge Assistant | Q&A over lab knowledge | ⬜ Not started |  |

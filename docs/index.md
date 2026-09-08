@@ -12,6 +12,11 @@ It's a personal, YAML-driven engine for running small, single-purpose AI
 actions against an OpenAI-compatible endpoint — local by default — wired
 to a KDE global shortcut, a searchable picker, or the command line.
 
+If your reaction to "local model" is "I don't have the hardware for
+that" — you probably do. See [Do you need the cloud?](local-models.md)
+for what "capable enough" actually means in practice, and how to get a
+model running without any AI or programming background.
+
 ## What a service actually is
 
 An action here is not an app. It's:
@@ -25,7 +30,7 @@ An action here is not an app. It's:
   need an account, because it's a function call, not a chat.
 
 That makes it closer to a Unix filter than a copilot. Every one of the
-[51 services in the catalog](services/index.md) runs like this, whether
+[55 services in the catalog](services/index.md) runs like this, whether
 it's triggered by a shortcut or by a pipe:
 
 ```bash
@@ -73,6 +78,7 @@ review-free runs, and building a new service end to end.
 
 ## Where to go next
 
+- [Do you need the cloud?](local-models.md) — why a small local model is enough, and whether your hardware can run one.
 - [Install](install.md) — getting `ai-actions` on your PATH and wired to a KDE shortcut.
 - [Examples](examples.md) — concrete walkthroughs: pipelines, batch runs, building a service.
 - [CLI reference](guide/cli.md) — `run`, `picker`, `list`, `service ...`.
