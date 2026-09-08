@@ -68,6 +68,8 @@ for service in services:
         f"| **review** | {service.review} |",
         f"| **clipboard on accept** | {service.clipboard_on_accept} |",
     ]
+    if service.verify:
+        lines.append(f"| **verify** | `{service.verify}` (sends input lines to an external API - see [Do you need the cloud?](../local-models.md)) |")
     if service.description:
         lines += ["", service.description]
     lines += ["", "## Prompt", "", "```", service.system_prompt.rstrip(), "```"]

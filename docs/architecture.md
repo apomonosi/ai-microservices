@@ -27,6 +27,7 @@ Clipboard/--file/--stdin
 | Module | Responsibility |
 |---|---|
 | `ai_actions/core.py` | Load `services/*.yaml`/`models.yaml`, build and send the chat-completion request, `validate_services()`. No GUI, no CLI concerns — this is what tests exercise directly. |
+| `ai_actions/verify.py` | The one external-lookup step in the engine: resolves each line of a `verify: crossref` service's input against Crossref's public API before the model call. See [Service manifest](guide/service-manifest.md#verify-crossref). |
 | `ai_actions/clipboard.py` | Clipboard read/write via `wl-clipboard`/`xclip` subprocesses. See [Roadmap](roadmap.md) for why this isn't `QClipboard`. |
 | `ai_actions/manage.py` | The mutating half of service management — `create`/`set`/`duplicate`/`delete`, plus `open_editor()`. Edits YAML as targeted text, not a full parse/re-dump, to avoid mangling hand-formatted prompts. |
 | `ai_actions/diff.py` | Word-level diff rendering (pure function, `difflib`-based) for the Result Inspector's `review: diff` mode. |
@@ -79,3 +80,12 @@ risk silently breaking the clipboard-driven shortcut flow.
 assuming both live in this checkout. A normal install would copy only the
 Python code into `site-packages`, stranding the very files this tool
 exists to let you hand-edit.
+
+**Why `verify: crossref` splices a lookup into the one existing model
+call instead of adding a second, conversational round trip.** The engine
+is deliberately single-shot request/response everywhere else (see
+[Roadmap](roadmap.md) on why a multi-turn Viva Simulator stays out of
+scope) — a service that needs "the LLM + retrieval + validation" pattern
+[Design principles](philosophy.md) describes doesn't need a second call
+to get it, just a richer first message. `run_service()` still sends
+exactly one request; `verify.py` only changes what goes into it.

@@ -30,7 +30,7 @@ An action here is not an app. It's:
   need an account, because it's a function call, not a chat.
 
 That makes it closer to a Unix filter than a copilot. Every one of the
-[55 services in the catalog](services/index.md) runs like this, whether
+[58 services in the catalog](services/index.md) runs like this, whether
 it's triggered by a shortcut or by a pipe:
 
 ```bash

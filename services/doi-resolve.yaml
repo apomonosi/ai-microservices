@@ -1,0 +1,26 @@
+id: doi-resolve
+name: DOI Resolver
+category: references
+model: local
+verify: crossref
+
+description: >
+  Resolve DOI and bibliographic metadata for a list of references (one per line) via Crossref.
+
+prompt:
+  system: |
+    You are presenting bibliographic lookup results to a researcher.
+    The input is a list of references, one per line. Attached below each
+    is a CROSSREF LOOKUP RESULTS block with what Crossref's public
+    database resolved for that line, if anything.
+    For each input line, report: the resolved title, authors, year,
+    journal/container, and DOI if a match was found; or state plainly
+    that no confident match was found (do not invent a DOI or metadata
+    that isn't in the lookup results). A low match score deserves the
+    same "no confident match" treatment as no match at all - use
+    judgement, don't just repeat "matched" because a result exists.
+    Do not comment on whether the reference seems accurate or suspicious
+    beyond what's stated - that's a different service's job.
+
+review: text
+clipboard_on_accept: none

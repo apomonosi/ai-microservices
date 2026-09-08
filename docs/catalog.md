@@ -28,7 +28,7 @@ for what that implies about which model backs which service.
 | 8 | Academic Writing | Academic Structure Checker | Check logical organization of a manuscript | ⬜ Not started |  |
 | 9 | Academic Writing | Terminology Consistency Checker | Detect inconsistent terminology and abbreviations | ✅ Done | [`terminology-check`](services/terminology-check.md) |
 | 10 | Academic Writing | Academic Conciseness Checker | Identify unnecessary verbosity and repetition | ✅ Done | [`make-concise`](services/make-concise.md) |
-| 11 | References | Reference Checker | Verify bibliographic references and metadata | ⬜ Not started |  |
+| 11 | References | Reference Checker | Verify bibliographic references and metadata | ✅ Done | [`reference-check`](services/reference-check.md) |
 | 12 | References | Citation Verifier | Verify DOI, authors, title, journal and year | ⬜ Not started |  |
 | 13 | References | Citation–Claim Checker | Determine whether citations support claims | ⬜ Not started |  |
 | 14 | References | Citation Completeness Checker | Identify claims that probably need citations | ✅ Done | [`citation-completeness`](services/citation-completeness.md) |
@@ -36,8 +36,8 @@ for what that implies about which model backs which service.
 | 16 | References | Citation Recency Checker | Identify outdated supporting literature | ⬜ Not started |  |
 | 17 | References | Reference Formatter | Convert references between citation styles | ⬜ Not started |  |
 | 18 | References | Bibliography Deduplicator | Detect duplicate references | ✅ Done | [`biblio-dedupe`](services/biblio-dedupe.md) |
-| 19 | References | Suspicious Reference Detector | Identify references that cannot be verified | ⬜ Not started |  |
-| 20 | References | DOI Resolver | Find and validate DOI metadata | ⬜ Not started |  |
+| 19 | References | Suspicious Reference Detector | Identify references that cannot be verified | ✅ Done | [`suspicious-reference-detect`](services/suspicious-reference-detect.md) |
+| 20 | References | DOI Resolver | Find and validate DOI metadata | ✅ Done | [`doi-resolve`](services/doi-resolve.md) |
 | 21 | Literature | Literature Review Assistant | Assist with planning and conducting reviews | ✅ Done | [`literature-review-assist`](services/literature-review-assist.md) |
 | 22 | Literature | Search Query Generator | Generate database-specific search strategies | ✅ Done | [`search-query-generate`](services/search-query-generate.md) |
 | 23 | Literature | Search Strategy Critic | Evaluate literature search strategies | ✅ Done | [`search-strategy-critic`](services/search-strategy-critic.md) |
@@ -173,7 +173,7 @@ infrastructure that hasn't been built yet, roughly in this order:
 |---|---|---|
 | Document layer | PDF/DOCX parsing, OCR, chunking | Multi-file inputs — theses, whole papers |
 | Retrieval layer | Embeddings, vector search | Course/policy/lab Q&A (rows 85, 87, 102–105) |
-| Verification layer | DOI/Crossref/OpenAlex lookups | Reference and citation checking (rows 11–13, 16, 17, 19, 20) |
+| Verification layer *(partially built — [`verify: crossref`](guide/service-manifest.md#verify-crossref))* | Crossref lookups done; OpenAlex/PubMed, retries, caching still open | Rows 11, 19, 20 now use it (`reference-check`, `suspicious-reference-detect`, `doi-resolve`). Rows 12, 16 stay open as close-duplicates for now; row 17 (Reference Formatter) doesn't actually need this layer — it's a deterministic format conversion, not verification |
 | Model router | Route by task, not by default | The minority that outgrows a small local model — e.g. a real Novelty Reviewer (row 39), comparing a manuscript against a whole supplied corpus |
 | Audit log | Record what ran, on what, with which model | Anything used for actual grading or institutional decisions |
 

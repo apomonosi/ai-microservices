@@ -210,6 +210,8 @@ def cmd_service_show(args: argparse.Namespace) -> int:
     print(f"model:               {model_line}")
     print(f"review:              {service.review}")
     print(f"clipboard_on_accept: {service.clipboard_on_accept}")
+    if service.verify:
+        print(f"verify:              {service.verify}  (this service sends input lines to an external API)")
     if service.description:
         print(f"description:         {service.description}")
     print()

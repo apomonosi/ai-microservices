@@ -179,7 +179,7 @@ and they've been built:
 Growing the catalog is just adding YAML files — no engine changes needed.
 Pull from `docs/catalog.md` opportunistically; it's a backlog, not a
 deliverable, and there's no fixed target count. As of this writing the
-library has 55 services, added in three batches using a consistent rule
+library has 58 services, added in four batches using a consistent rule
 for what qualifies as "just a YAML file" versus a separate mini-project:
 
 **In scope** (single pasted-text input, one system prompt, no external
@@ -222,3 +222,19 @@ within a table, not cross-mention agreement). codebook-generate produces
 the standing coding scheme that qualitative-coding-assist doesn't
 (per-transcript codes only). research-risk-register is the first entry
 in Research Management beyond meeting notes.
+
+Fourth batch (reference-check, suspicious-reference-detect,
+doi-resolve): the first attempt at a previously-deferred "harder
+category" above — real verification against an external registry. Rather
+than a general-purpose retrieval framework, this is the smallest real
+version: a new optional `verify: crossref` manifest field
+(`ai_actions/verify.py`) that resolves each pasted reference line against
+Crossref's public API before the one model call, still single-shot, no
+new dependency. See [Design principles](docs/philosophy.md#the-pattern-behind-a-service-that-checks-something)
+for the pattern and [Service manifest](docs/guide/service-manifest.md#verify-crossref)
+for the mechanics. Citation Verifier/Citation Recency Checker (rows 12,
+16) stayed out as too close to reference-check for now; Reference
+Formatter (row 17) doesn't need this layer at all — it's a deterministic
+format conversion. This is also the first time any service talks to
+anything other than the configured model endpoint — documented plainly
+in docs/local-models.md rather than left implicit.

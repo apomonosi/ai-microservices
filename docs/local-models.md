@@ -52,8 +52,8 @@ doesn't care where the endpoint lives, see below.
 
 This is the part that's easy to doubt, because "small" sounds like a
 compromise. For the mundane, checkable tasks this project's
-[catalog](catalog.md) is built from, it isn't. Every one of the 55
-services already in `services/*.yaml` is configured to run on the
+[catalog](catalog.md) is built from, it isn't. All but three of the 58
+services already in `services/*.yaml` are configured to run on the
 `local` profile in the example above, and the reason is in [Design
 principles](philosophy.md): checking whether a citation supports a
 claim, whether two numbers agree, or whether a rubric covers its stated
@@ -64,6 +64,22 @@ larger model — broad, open-ended literary judgement rather than a
 checkable fact — are the minority [Design principles](philosophy.md)
 also describes, and nothing stops you from pointing just those specific
 services at a cloud endpoint instead, service by service.
+
+## The exception: three services that do talk to the network
+
+Everything above is true of every service except three:
+[`reference-check`](services/reference-check.md),
+[`doi-resolve`](services/doi-resolve.md), and
+[`suspicious-reference-detect`](services/suspicious-reference-detect.md).
+Checking whether a citation is real isn't something any model, local or
+cloud, can do from its own training — it has to look the reference up
+against an actual bibliographic database. These three send each pasted
+reference line (not the rest of your document) to
+[Crossref](https://api.crossref.org)'s free public API to do that lookup,
+in addition to your local model. `ai-actions service show <id>` prints a
+`verify:` line as a heads-up before you run one — see [Service
+manifest](guide/service-manifest.md#verify-crossref) for exactly what
+gets sent. Every other service in the catalog never leaves your machine.
 
 ## Getting a model running, without a computer-science degree
 

@@ -135,6 +135,17 @@ def test_validate_services_empty_prompt(services_dir, models_file):
     assert any("empty prompt.system" in p for p in problems)
 
 
+def test_validate_services_invalid_verify(services_dir, models_file):
+    write_service_file(services_dir, "bad-verify", verify="openalex")
+    problems = validate_services(services_dir, models_file)
+    assert any("invalid verify" in p for p in problems)
+
+
+def test_validate_services_valid_verify_ok(services_dir, models_file):
+    write_service_file(services_dir, "good-verify", verify="crossref")
+    assert validate_services(services_dir, models_file) == []
+
+
 def test_validate_services_id_filename_mismatch(services_dir, models_file):
     write_service_file(services_dir, "outer-name", internal_id="inner-name")
     problems = validate_services(services_dir, models_file)
@@ -177,6 +188,60 @@ def _service(**overrides) -> Service:
     )
     fields.update(overrides)
     return Service(**fields)
+
+
+def test_run_service_with_verify_crossref_splices_lookup_results(monkeypatch):
+    captured = {}
+
+    def fake_post(url, json, headers, timeout):
+        captured["json"] = json
+
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "checked"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    monkeypatch.setattr(
+        "ai_actions.verify.resolve_references", lambda text: "Input: ref one\nStatus: matched"
+    )
+    models = {"local": ModelProfile(name="local", url="http://example.test/v1", model="m")}
+
+    result = run_service(_service(verify="crossref"), "ref one", models=models)
+
+    assert result == "checked"
+    user_message = captured["json"]["messages"][1]["content"]
+    assert "ref one" in user_message
+    assert "CROSSREF LOOKUP RESULTS" in user_message
+    assert "Status: matched" in user_message
+
+
+def test_run_service_without_verify_does_not_touch_lookup(monkeypatch):
+    def boom(text):
+        raise AssertionError("resolve_references should not be called")
+
+    monkeypatch.setattr("ai_actions.verify.resolve_references", boom)
+
+    def fake_post(url, json, headers, timeout):
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "ok"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    models = {"local": ModelProfile(name="local", url="http://example.test/v1", model="m")}
+
+    result = run_service(_service(), "hello", models=models)
+
+    assert result == "ok"
 
 
 def test_run_service_success(monkeypatch):

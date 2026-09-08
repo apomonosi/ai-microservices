@@ -48,6 +48,7 @@ class Service:
     review: str = "text"
     clipboard_on_accept: str = "none"
     description: str = ""
+    verify: str | None = None
 
 
 def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
@@ -105,6 +106,7 @@ def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
         review=data.get("review", "text"),
         clipboard_on_accept=data.get("clipboard_on_accept", "none"),
         description=(data.get("description") or "").strip(),
+        verify=data.get("verify"),
     )
 
 
@@ -136,6 +138,7 @@ def list_services(services_dir: Path = SERVICES_DIR) -> list[Service]:
 
 _VALID_REVIEW_TYPES = ("diff", "text")
 _VALID_CLIPBOARD_MODES = ("replace", "none")
+_VALID_VERIFY_TYPES = ("crossref",)
 
 
 def validate_services(
@@ -184,6 +187,10 @@ def validate_services(
             )
         if not service.system_prompt.strip():
             problems.append(f"{path.name}: empty prompt.system")
+        if service.verify is not None and service.verify not in _VALID_VERIFY_TYPES:
+            problems.append(
+                f"{path.name}: invalid verify '{service.verify}' (expected one of {_VALID_VERIFY_TYPES})"
+            )
 
     return problems
 
@@ -201,12 +208,24 @@ def run_service(
         raise ConfigError(f"Service '{service.id}' references unknown model '{service.model}'")
     profile = models[service.model]
 
+    user_content = input_text
+    if service.verify == "crossref":
+        from . import verify  # lazy: only services that use it need it
+
+        resolved = verify.resolve_references(input_text)
+        user_content = (
+            f"{input_text}\n\n---\nCROSSREF LOOKUP RESULTS (reason over these - a match is not "
+            "proof, check the score and details against what's claimed; a miss is not proof of "
+            "fabrication, Crossref doesn't index everything):\n"
+            f"{resolved}"
+        )
+
     payload = {
         "model": profile.model,
         "temperature": profile.temperature,
         "messages": [
             {"role": "system", "content": service.system_prompt},
-            {"role": "user", "content": input_text},
+            {"role": "user", "content": user_content},
         ],
     }
     headers = {"Content-Type": "application/json"}
