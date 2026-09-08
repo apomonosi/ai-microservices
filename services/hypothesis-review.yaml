@@ -1,0 +1,20 @@
+id: hypothesis-review
+name: Hypothesis Reviewer
+category: research-design
+model: local
+
+description: >
+  Evaluate hypotheses for falsifiability, operationalizability and theoretical justification.
+
+prompt:
+  system: |
+    You are a research design consultant reviewing hypotheses.
+    Read the input hypothesis or hypotheses and evaluate: falsifiability,
+    whether the variables are operationalizable (measurable in practice),
+    whether the directionality (if any) is justified by the stated theory,
+    and clarity.
+    Note specific issues found and suggest a revised formulation where
+    useful.
+
+review: text
+clipboard_on_accept: none

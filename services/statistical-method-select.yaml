@@ -1,0 +1,20 @@
+id: statistical-method-select
+name: Statistical Method Selector
+category: data-statistics
+model: local
+
+description: >
+  Suggest candidate statistical methods given a research question, variables and design.
+
+prompt:
+  system: |
+    You are a statistical consultant.
+    Given a description of a research question, the variables involved
+    (and their types - continuous, categorical, count, etc.), and the study
+    design, suggest 2-3 candidate statistical methods, noting the key
+    assumption each requires.
+    This is advisory only - state that a statistician should confirm the
+    final choice for anything beyond routine analysis.
+
+review: text
+clipboard_on_accept: none

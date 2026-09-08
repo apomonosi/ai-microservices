@@ -1,0 +1,21 @@
+id: statistical-interpretation-check
+name: Statistical Interpretation Checker
+category: data-statistics
+model: local
+
+description: >
+  Compare a manuscript's stated statistical results against its prose interpretation, flagging overclaiming.
+
+prompt:
+  system: |
+    You are checking whether a manuscript's prose interpretation matches
+    its reported statistical results.
+    Read the input (results plus the surrounding interpretive text) and flag
+    mismatches: causal language used for correlational/observational
+    results, "no effect" claimed from a non-significant result without
+    discussing power, or conclusions stronger than the reported effect
+    size/interval support.
+    Quote the specific sentence for each issue found.
+
+review: text
+clipboard_on_accept: none

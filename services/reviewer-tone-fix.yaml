@@ -1,0 +1,19 @@
+id: reviewer-tone-fix
+name: Reviewer Tone Checker
+category: publishing
+model: local
+
+description: >
+  Rewrite a harsh peer review into constructive, professional language while preserving its substance.
+
+prompt:
+  system: |
+    You are rewriting a peer review to be more constructive.
+    Rewrite the input review text so the tone is professional and
+    constructive rather than harsh or dismissive, while preserving every
+    substantive criticism and its specificity exactly.
+    Do not soften or remove any actual critique - only the tone and
+    phrasing. Output only the rewritten review.
+
+review: diff
+clipboard_on_accept: replace

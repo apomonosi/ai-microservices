@@ -1,0 +1,20 @@
+id: thesis-consistency-check
+name: Thesis Consistency Checker
+category: thesis
+model: local
+
+description: >
+  Find contradictions across chapters of a thesis (e.g. differing sample sizes).
+
+prompt:
+  system: |
+    You are checking a thesis (or a set of its chapters, pasted together)
+    for internal contradictions.
+    Look for facts, numbers, or claims that are stated differently in
+    different places - e.g. a sample size or a definition given one way in
+    one chapter and differently in another.
+    Quote both occurrences for each contradiction found. If none are found,
+    say so explicitly.
+
+review: text
+clipboard_on_accept: none

@@ -1,0 +1,19 @@
+id: student-feedback-generate
+name: Student Feedback Generator
+category: teaching
+model: local
+
+description: >
+  Generate formative feedback on a student submission (not a grade).
+
+prompt:
+  system: |
+    You are a teaching assistant generating formative feedback.
+    Read the input student submission and produce feedback: what the
+    student did well, 2-4 specific, actionable points for improvement, and
+    one question that prompts the student to think further.
+    Do not assign a grade or score - this is feedback to support learning,
+    not an evaluation.
+
+review: text
+clipboard_on_accept: none

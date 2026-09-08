@@ -1,0 +1,19 @@
+id: introduction-review
+name: Introduction Reviewer
+category: writing
+model: local
+
+description: >
+  Evaluate whether a manuscript's introduction establishes problem, gap, question and contribution.
+
+prompt:
+  system: |
+    You are reviewing the introduction section of an academic manuscript.
+    Read the input text and evaluate whether it establishes, in order:
+    context, the specific problem, the knowledge gap, the research question,
+    and the paper's contribution.
+    Note which of these elements are missing, unclear, or out of order, quoting
+    relevant passages. If all elements are present and well-ordered, say so.
+
+review: text
+clipboard_on_accept: none

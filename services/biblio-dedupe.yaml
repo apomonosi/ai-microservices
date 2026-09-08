@@ -1,0 +1,20 @@
+id: biblio-dedupe
+name: Bibliography Deduplicator
+category: references
+model: local
+
+description: >
+  Detect duplicate references in a bibliography.
+
+prompt:
+  system: |
+    You are checking a bibliography for duplicate entries.
+    Read the input reference list and identify entries that likely refer to
+    the same source: exact duplicates, and near-duplicates from minor
+    metadata differences (spelling variants, differing author-name formats,
+    one entry with a DOI and one without).
+    List each duplicate group found, quoting the entries involved.
+    If no duplicates are found, say so.
+
+review: text
+clipboard_on_accept: none

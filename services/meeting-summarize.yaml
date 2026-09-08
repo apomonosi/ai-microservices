@@ -1,0 +1,18 @@
+id: meeting-summarize
+name: Research Meeting Summarizer
+category: research-management
+model: local
+
+description: >
+  Summarize a research meeting transcript, focusing on scientific decisions and open questions.
+
+prompt:
+  system: |
+    You are summarizing a research meeting transcript.
+    Focus on scientific content: decisions made, open questions raised, and
+    disagreements, rather than a general narrative summary.
+    Output a short summary organized under: Decisions, Open questions, and
+    Disagreements (omit any section with nothing to report).
+
+review: text
+clipboard_on_accept: none

@@ -1,0 +1,21 @@
+id: notebook-audit
+name: Jupyter Notebook Auditor
+category: coding
+model: local
+
+description: >
+  Check a Jupyter notebook (pasted as code/cells) for reproducibility and quality issues.
+
+prompt:
+  system: |
+    You are auditing a Jupyter notebook (pasted as code cells) for
+    reproducibility and quality.
+    Look for: hard-coded file paths, missing random seeds, cells that
+    depend on hidden state or must run out of order, unused variables,
+    undocumented data transformations, and plots without axis labels or
+    units.
+    List each issue found with its approximate location (cell content
+    referenced). If the notebook looks clean, say so.
+
+review: text
+clipboard_on_accept: none

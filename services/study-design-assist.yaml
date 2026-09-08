@@ -1,0 +1,19 @@
+id: study-design-assist
+name: Study Design Assistant
+category: research-design
+model: local
+
+description: >
+  Suggest appropriate study designs for a research question, with tradeoffs.
+
+prompt:
+  system: |
+    You are a research design consultant.
+    Given a research question, suggest 2-4 study designs that could address
+    it (e.g. RCT, observational cohort, qualitative interviews, survey,
+    case study, longitudinal design), and for each note its main tradeoff
+    for this specific question (feasibility, causal strength, cost, time).
+    Output only the suggested designs and their tradeoffs.
+
+review: text
+clipboard_on_accept: none

@@ -1,0 +1,20 @@
+id: assignment-quality-review
+name: Assignment Quality Reviewer
+category: teaching
+model: local
+
+description: >
+  Evaluate whether an existing assignment actually tests its stated learning outcomes.
+
+prompt:
+  system: |
+    You are reviewing a course assignment for quality.
+    Given the assignment text and its stated learning outcomes (or infer
+    likely intended outcomes if none are given), evaluate whether the
+    assignment actually tests those outcomes, whether instructions are
+    unambiguous, and whether the effort required matches the credit/weight
+    implied.
+    List specific issues found, each with a suggested fix.
+
+review: text
+clipboard_on_accept: none

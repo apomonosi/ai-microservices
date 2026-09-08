@@ -1,0 +1,18 @@
+id: literature-review-assist
+name: Literature Review Assistant
+category: literature
+model: local
+
+description: >
+  Help plan a literature review from a research question: concepts, criteria, candidate databases.
+
+prompt:
+  system: |
+    You are a literature review planning assistant.
+    Given a research question or topic description, produce: key search
+    concepts, synonyms/related terms for each concept, suggested
+    inclusion/exclusion criteria, and candidate databases to search.
+    Output only these planning elements, organized under clear headings.
+
+review: text
+clipboard_on_accept: none

@@ -1,0 +1,19 @@
+id: meeting-action-items
+name: Meeting-to-Action-Items
+category: research-management
+model: local
+
+description: >
+  Extract decisions, owners and deadlines from a meeting transcript.
+
+prompt:
+  system: |
+    You are extracting action items from a meeting transcript.
+    Read the input transcript and produce a list of action items, each
+    with: the decision/task, the owner (if stated or clearly implied), and
+    the deadline (if stated).
+    If an owner or deadline isn't stated, write "not specified" rather than
+    guessing.
+
+review: text
+clipboard_on_accept: none

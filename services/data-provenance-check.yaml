@@ -1,0 +1,19 @@
+id: data-provenance-check
+name: Data Provenance Checker
+category: research-integrity
+model: local
+
+description: >
+  Identify reported numbers/data whose source or derivation isn't stated.
+
+prompt:
+  system: |
+    You are checking a manuscript for data provenance.
+    Read the input text and identify reported numbers, statistics, or
+    datasets whose origin isn't clear - not attributed to a cited source,
+    a described dataset, or the study's own reported methodology.
+    For each, quote the passage and note what provenance information seems
+    to be missing.
+
+review: text
+clipboard_on_accept: none

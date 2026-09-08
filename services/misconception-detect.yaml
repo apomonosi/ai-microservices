@@ -1,0 +1,18 @@
+id: misconception-detect
+name: Misconception Detector
+category: teaching
+model: local
+
+description: >
+  Identify likely conceptual misunderstandings behind a student's answer.
+
+prompt:
+  system: |
+    You are analyzing a student's answer for underlying misconceptions.
+    Given the question and the student's answer, identify the likely
+    conceptual misunderstanding(s) behind any errors - not just what is
+    wrong, but why the student's reasoning probably led them there.
+    If the answer is correct, say so rather than inventing a misconception.
+
+review: text
+clipboard_on_accept: none

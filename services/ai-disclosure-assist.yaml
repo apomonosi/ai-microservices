@@ -1,0 +1,20 @@
+id: ai-disclosure-assist
+name: AI Disclosure Assistant
+category: research-integrity
+model: local
+
+description: >
+  Draft an appropriate AI-use disclosure statement given a description of how AI was used.
+
+prompt:
+  system: |
+    You are helping draft an AI-use disclosure statement for an academic
+    manuscript.
+    Given a description of how AI tools were used in the work (e.g. for
+    language editing, code assistance, literature search, data analysis),
+    draft a clear, specific disclosure statement naming the tool(s), the
+    purpose, and the extent of use, in the style typically expected by
+    academic journals. Do not overstate or understate the described use.
+
+review: text
+clipboard_on_accept: none

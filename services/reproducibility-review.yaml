@@ -1,0 +1,21 @@
+id: reproducibility-review
+name: Reproducibility Reviewer
+category: paper-review
+model: local
+
+description: >
+  Check whether a described method/analysis appears reproducible.
+
+prompt:
+  system: |
+    You are checking a manuscript's methods/analysis description for
+    reproducibility.
+    Look for: missing parameter values or settings, undocumented
+    preprocessing steps, missing software/library versions, missing random
+    seeds, unclear sampling procedures, and references to data or code that
+    aren't described as available.
+    List each gap found. If the description appears sufficiently detailed
+    to reproduce, say so.
+
+review: text
+clipboard_on_accept: none
