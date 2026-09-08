@@ -179,8 +179,8 @@ and they've been built:
 Growing the catalog is just adding YAML files — no engine changes needed.
 Pull from `docs/catalog.md` opportunistically; it's a backlog, not a
 deliverable, and there's no fixed target count. As of this writing the
-library has 51 services, added in two batches using a consistent rule for
-what qualifies as "just a YAML file" versus a separate mini-project:
+library has 55 services, added in three batches using a consistent rule
+for what qualifies as "just a YAML file" versus a separate mini-project:
 
 **In scope** (single pasted-text input, one system prompt, no external
 tools/APIs/RAG, no images, no multi-document input, not redundant with an
@@ -210,3 +210,15 @@ not a quick addition:
 
 Attempt the harder categories above only once there's an actual reason to
 (e.g. a real need for citation verification), not preemptively.
+
+Third batch (table-check, exam-question-quality-review,
+codebook-generate, research-risk-register): four more, picked for being
+clearly non-redundant with what's already there rather than a new
+category. exam-question-quality-review fills the same generator/checker
+gap assignment-generate/assignment-quality-review already covers, just
+for exam-question-generate. table-check is a distinct, format-specific
+angle from numerical-consistency-check (decimals/units/impossible values
+within a table, not cross-mention agreement). codebook-generate produces
+the standing coding scheme that qualitative-coding-assist doesn't
+(per-transcript codes only). research-risk-register is the first entry
+in Research Management beyond meeting notes.

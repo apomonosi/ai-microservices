@@ -83,6 +83,6 @@ for the rest of the lifecycle — duplicating, adjusting fields, deleting.
 ai-actions picker --file manuscript.md --output result.txt
 ```
 
-Search-as-you-type over all [51 services](services/index.md), then the
+Search-as-you-type over all [55 services](services/index.md), then the
 same review step as `run` — just with the choice of *what* to run made
 interactively instead of on the command line.

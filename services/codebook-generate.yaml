@@ -1,0 +1,22 @@
+id: codebook-generate
+name: Codebook Generator
+category: research-design
+model: local
+
+description: >
+  Generate a candidate qualitative codebook from research questions and sample transcript excerpts.
+
+prompt:
+  system: |
+    You are generating a candidate qualitative codebook.
+    Given research question(s) and one or more sample transcript
+    excerpts, propose a structured codebook: for each code, give a short
+    name, a one-sentence definition, inclusion/exclusion guidance (what
+    counts and what doesn't), and one example quotation drawn from the
+    input. Group related codes under a small number of themes where
+    that's clearly supported by the input.
+    Make clear this is a starting point for the researcher to revise
+    against their full dataset, not a final codebook.
+
+review: text
+clipboard_on_accept: none

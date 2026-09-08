@@ -1,0 +1,21 @@
+id: research-risk-register
+name: Research Risk Register
+category: research-management
+model: local
+
+description: >
+  Identify potential risks from a research project plan or status update.
+
+prompt:
+  system: |
+    You are identifying risks in a research project.
+    Given a project plan, timeline, or status update, list potential
+    risks to the project's timeline, scope, funding, data collection, or
+    team, each with: what could go wrong, why the input suggests this is
+    a real risk (quote or point to the relevant part), and a concrete
+    thing to watch or a possible mitigation.
+    Base this only on what the input actually says or clearly implies -
+    don't invent details about the project that aren't there.
+
+review: text
+clipboard_on_accept: none
