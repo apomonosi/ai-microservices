@@ -28,6 +28,7 @@ Clipboard/--file/--stdin
 |---|---|
 | `ai_actions/core.py` | Load `services/*.yaml`/`models.yaml`, build and send the chat-completion request, `validate_services()`. No GUI, no CLI concerns — this is what tests exercise directly. |
 | `ai_actions/verify.py` | The one external-lookup step in the engine: resolves each line of a `verify: crossref` service's input against Crossref's public API before the model call. See [Service manifest](guide/service-manifest.md#verify-crossref). |
+| `ai_actions/corpus.py` | The retrieval layer: BM25 lexical search over a directory of text files, for services declaring `corpus: <id>`. Fully local — no embeddings, no vector database. See [Corpora](guide/corpora.md). |
 | `ai_actions/clipboard.py` | Clipboard read/write via `wl-clipboard`/`xclip` subprocesses. See [Roadmap](roadmap.md) for why this isn't `QClipboard`. |
 | `ai_actions/manage.py` | The mutating half of service management — `create`/`set`/`duplicate`/`delete`, plus `open_editor()`. Edits YAML as targeted text, not a full parse/re-dump, to avoid mangling hand-formatted prompts. |
 | `ai_actions/diff.py` | Word-level diff rendering (pure function, `difflib`-based) for the Result Inspector's `review: diff` mode. |
@@ -89,3 +90,15 @@ scope) — a service that needs "the LLM + retrieval + validation" pattern
 [Design principles](philosophy.md) describes doesn't need a second call
 to get it, just a richer first message. `run_service()` still sends
 exactly one request; `verify.py` only changes what goes into it.
+
+**Why `corpus.py` is BM25, not embeddings.** An embedding-based retrieval
+pipeline needs an embedding model (most single-local-model setups don't
+expose one — see [Do you need the cloud?](local-models.md)), a vector
+index, and a similarity-search library. At the scale this project
+actually deals with — a syllabus, a policy document, a department's FAQ,
+dozens to a few hundred paragraphs — a dependency-free BM25 ranker scores
+every chunk in milliseconds with nothing beyond the standard library.
+Same call as Crossref over a general verification framework: the
+smallest real version first, with the trade-off (lexical match, not
+semantic — different wording than the source can rank a chunk lower)
+written down in [Corpora](guide/corpora.md) rather than hidden.

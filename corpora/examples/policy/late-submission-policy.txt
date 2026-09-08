@@ -1,0 +1,30 @@
+This is a fictional example policy document used to demonstrate the
+policy-qa service. It is not a real institutional policy.
+
+Late Submission Policy for Coursework
+
+Coursework submitted after its published deadline is considered late.
+Students are expected to submit work on time except in cases covered by
+this policy.
+
+A student may submit coursework up to 24 hours late without penalty if
+they notify the course instructor before the original deadline. This
+applies at most twice per course per term.
+
+Beyond the 24-hour grace period, or without prior notification, late
+coursework is penalized at five percent of the total available marks per
+day late, including weekends, up to a maximum of five days.
+
+Coursework submitted more than five days late will not be marked unless
+the student has an approved extenuating-circumstances extension on file
+with the department office.
+
+Extenuating circumstances (documented illness, bereavement, or similar)
+should be reported to the department office as soon as practical, and
+normally within five working days of the affected deadline. The
+department office, not the individual instructor, decides whether an
+extension is granted.
+
+This policy applies to individual coursework. Group coursework deadlines
+and extensions are set by the module convener at the start of term and
+may differ from this policy.

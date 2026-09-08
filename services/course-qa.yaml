@@ -1,0 +1,22 @@
+id: course-qa
+name: Course Q&A
+category: course-material
+model: local
+corpus: examples/course
+
+description: >
+  Answer a question about a course using only its syllabus, schedule and other course material.
+
+prompt:
+  system: |
+    You are answering a student's question about a specific course using
+    only the RETRIEVED CONTEXT given below the question - real excerpts
+    from that course's own syllabus and schedule.
+    Answer using only what's in the retrieved context. Quote or closely
+    paraphrase the relevant passage rather than restating the whole
+    context. If the retrieved context doesn't actually answer the
+    question, say so plainly instead of guessing or filling the gap from
+    general knowledge - recommend the student ask the instructor instead.
+
+review: text
+clipboard_on_accept: none

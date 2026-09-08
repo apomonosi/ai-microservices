@@ -101,12 +101,38 @@ this is never a surprise. `doi-resolve` and
 run the same lookup, framed as a plain metadata report and a
 verified/ambiguous/not-found classification respectively.
 
+## Ask a question against your own documents
+
+[`course-qa`](services/course-qa.md) searches a local corpus (a folder of
+plain text files, see [Corpora](guide/corpora.md)) before answering —
+fully offline, no Crossref-style network call. The shipped example corpus
+(`corpora/examples/course/`) is a fictional syllabus and schedule:
+
+```bash
+ai-actions run course-qa --text "What's the penalty for a late problem set?" --no-gui
+```
+
+That answers directly from the syllabus's own late-policy paragraph.
+Compare it with a question the corpus doesn't cover:
+
+```bash
+ai-actions run course-qa --text "What programming language does the course use?" --no-gui
+```
+
+The syllabus never says, so the answer should say so plainly rather than
+guessing — that's the prompt's job, not the retrieval's; BM25 always
+returns its best-ranked chunks even when none of them are relevant.
+`ai-actions corpus show examples/course` shows exactly what's in the
+corpus being searched. [`policy-qa`](services/policy-qa.md) and
+[`department-knowledge-assistant`](services/department-knowledge-assistant.md)
+work the same way over their own example corpora.
+
 ## Not sure which service you want?
 
 ```bash
 ai-actions picker --file manuscript.md --output result.txt
 ```
 
-Search-as-you-type over all [58 services](services/index.md), then the
+Search-as-you-type over all [61 services](services/index.md), then the
 same review step as `run` — just with the choice of *what* to run made
 interactively instead of on the command line.

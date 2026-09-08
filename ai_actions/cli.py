@@ -7,6 +7,7 @@ from pathlib import Path
 
 from . import clipboard
 from .clipboard import ClipboardError
+from . import corpus as corpus_mod
 from .core import (
     ConfigError,
     EngineError,
@@ -212,6 +213,13 @@ def cmd_service_show(args: argparse.Namespace) -> int:
     print(f"clipboard_on_accept: {service.clipboard_on_accept}")
     if service.verify:
         print(f"verify:              {service.verify}  (this service sends input lines to an external API)")
+    if service.corpus:
+        try:
+            chunk_count = len(corpus_mod.load_corpus_chunks(service.corpus))
+            corpus_note = f"{chunk_count} chunks, fully local"
+        except corpus_mod.CorpusError as exc:
+            corpus_note = f"error: {exc}"
+        print(f"corpus:              {service.corpus}  ({corpus_note})")
     if service.description:
         print(f"description:         {service.description}")
     print()
@@ -230,6 +238,42 @@ def cmd_service_search(args: argparse.Namespace) -> int:
         print(f"no services match '{args.query}'", file=sys.stderr)
         return 0
     _print_service_rows(matches)
+    return 0
+
+
+def cmd_corpus_list(args: argparse.Namespace) -> int:
+    ids = corpus_mod.list_corpora()
+    if not ids:
+        print("no corpora defined in corpora/", file=sys.stderr)
+        return 0
+    for corpus_id in ids:
+        try:
+            chunk_count = len(corpus_mod.load_corpus_chunks(corpus_id))
+        except corpus_mod.CorpusError:
+            chunk_count = 0
+        print(f"{corpus_id:30s} {chunk_count:4d} chunks")
+    return 0
+
+
+def cmd_corpus_show(args: argparse.Namespace) -> int:
+    try:
+        chunks = corpus_mod.load_corpus_chunks(args.corpus_id)
+    except corpus_mod.CorpusError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    files: dict[str, int] = {}
+    total_words = 0
+    for chunk in chunks:
+        files[chunk.source] = files.get(chunk.source, 0) + 1
+        total_words += len(chunk.text.split())
+
+    print(f"corpus:  {args.corpus_id}")
+    print(f"chunks:  {len(chunks)}")
+    print(f"words:   {total_words}")
+    print("files:")
+    for name, count in sorted(files.items()):
+        print(f"  {name:30s} {count:4d} chunks")
     return 0
 
 
@@ -320,11 +364,12 @@ def cmd_service_set(args: argparse.Namespace) -> int:
         "model": args.model,
         "review": args.review,
         "clipboard_on_accept": args.clipboard_on_accept,
+        "corpus": args.corpus,
     }
     fields = {field: value for field, value in fields.items() if value is not None}
     if not fields:
         print(
-            "error: no fields given (use --name/--category/--model/--review/--clipboard-on-accept)",
+            "error: no fields given (use --name/--category/--model/--review/--clipboard-on-accept/--corpus)",
             file=sys.stderr,
         )
         return 1
@@ -484,6 +529,7 @@ def build_parser() -> argparse.ArgumentParser:
     svc_set_p.add_argument("--model")
     svc_set_p.add_argument("--review", choices=["diff", "text"])
     svc_set_p.add_argument("--clipboard-on-accept", dest="clipboard_on_accept", choices=["replace", "none"])
+    svc_set_p.add_argument("--corpus", help="Corpus id to bind this service's retrieval to (see `corpus list`)")
     svc_set_p.set_defaults(func=cmd_service_set)
 
     svc_dup_p = service_sub.add_parser("duplicate", help="Copy an existing service under a new id")
@@ -499,6 +545,16 @@ def build_parser() -> argparse.ArgumentParser:
     svc_del_p.add_argument("service_id")
     svc_del_p.add_argument("--yes", action="store_true", help="Skip the confirmation prompt")
     svc_del_p.set_defaults(func=cmd_service_delete)
+
+    corpus_p = sub.add_parser("corpus", help="Inspect local retrieval corpora (for services with `corpus:` set)")
+    corpus_sub = corpus_p.add_subparsers(dest="corpus_command", required=True)
+
+    corpus_list_p = corpus_sub.add_parser("list", help="List corpus ids found under corpora/, with chunk counts")
+    corpus_list_p.set_defaults(func=cmd_corpus_list)
+
+    corpus_show_p = corpus_sub.add_parser("show", help="Show a corpus's files, chunk count, and word count")
+    corpus_show_p.add_argument("corpus_id")
+    corpus_show_p.set_defaults(func=cmd_corpus_show)
 
     return parser
 

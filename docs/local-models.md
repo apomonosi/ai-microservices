@@ -52,8 +52,8 @@ doesn't care where the endpoint lives, see below.
 
 This is the part that's easy to doubt, because "small" sounds like a
 compromise. For the mundane, checkable tasks this project's
-[catalog](catalog.md) is built from, it isn't. All but three of the 58
-services already in `services/*.yaml` are configured to run on the
+[catalog](catalog.md) is built from, it isn't. Every one of the 61
+services already in `services/*.yaml` is configured to run on the
 `local` profile in the example above, and the reason is in [Design
 principles](philosophy.md): checking whether a citation supports a
 claim, whether two numbers agree, or whether a rubric covers its stated
@@ -80,6 +80,16 @@ in addition to your local model. `ai-actions service show <id>` prints a
 `verify:` line as a heads-up before you run one — see [Service
 manifest](guide/service-manifest.md#verify-crossref) for exactly what
 gets sent. Every other service in the catalog never leaves your machine.
+
+Worth being precise about one thing that might look similar but isn't:
+[`course-qa`](services/course-qa.md), [`policy-qa`](services/policy-qa.md),
+and [`department-knowledge-assistant`](services/department-knowledge-assistant.md)
+also pull in outside material — your course notes, a policy document — but
+that material lives in a plain folder on your own disk (`corpora/`, see
+[Corpora](guide/corpora.md)) and is searched locally. Nothing about them
+talks to a network. `service show <id>` still prints a line either way
+(`corpus:` for these, `verify:` for the Crossref three) so you never have
+to guess which kind of service you're looking at.
 
 ## Getting a model running, without a computer-science degree
 

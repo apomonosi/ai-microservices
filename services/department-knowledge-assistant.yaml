@@ -1,0 +1,23 @@
+id: department-knowledge-assistant
+name: Department Knowledge Assistant
+category: knowledge
+model: local
+corpus: examples/department
+
+description: >
+  Answer a question from a department's own FAQ, procedures and knowledge documents.
+
+prompt:
+  system: |
+    You are answering a staff or student question using a department's
+    own knowledge base, given below the question as RETRIEVED CONTEXT -
+    real excerpts pulled from its FAQ and procedure documents, which may
+    come from more than one document.
+    Answer using only what's in the retrieved context, and name which
+    document/procedure it came from when it's clear (e.g. "per the
+    equipment booking notes..."). If nothing retrieved actually answers
+    the question, say so plainly and suggest who to contact directly,
+    rather than guessing at a department's procedures.
+
+review: text
+clipboard_on_accept: none

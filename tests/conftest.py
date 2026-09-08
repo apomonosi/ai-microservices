@@ -23,6 +23,13 @@ def services_dir(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
+def corpora_dir(tmp_path: Path) -> Path:
+    path = tmp_path / "corpora"
+    path.mkdir()
+    return path
+
+
+@pytest.fixture
 def models_file(tmp_path: Path) -> Path:
     """A models.yaml with a 'local' profile pointing at an unroutable
     address. Fine for list/show/search/validate/manage tests, which

@@ -1,0 +1,26 @@
+Introduction to Data Systems (CS 214) is a fictional example course used
+to demonstrate the course-qa service. It covers the design of systems
+that store and process data at scale, from single-machine databases to
+distributed storage.
+
+By the end of the course, students should be able to design a normalized
+relational schema, explain the tradeoffs between consistency and
+availability in a distributed system, and write efficient SQL queries
+against a multi-table database.
+
+The course meets Tuesdays and Thursdays from 10:00 to 11:15 in Halden
+Hall room 118. There is no separate lab section this term.
+
+Grading is based on four problem sets (40% total), a midterm exam (25%),
+and a final project (35%). There is no final exam.
+
+Late problem sets lose ten percent of the available credit per day late,
+up to three days. After three days late, a problem set receives no
+credit unless an extension was arranged in advance with the instructor.
+
+Office hours are Wednesday afternoons from 14:00 to 16:00 in the
+instructor's office, Halden Hall room 302. No appointment is needed.
+
+Academic integrity: problem sets are individual work. Discussing general
+concepts with classmates is encouraged, but submitted code and written
+answers must be your own.

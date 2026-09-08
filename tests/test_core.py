@@ -146,6 +146,21 @@ def test_validate_services_valid_verify_ok(services_dir, models_file):
     assert validate_services(services_dir, models_file) == []
 
 
+def test_validate_services_unknown_corpus(services_dir, models_file, corpora_dir, monkeypatch):
+    monkeypatch.setattr("ai_actions.corpus.CORPORA_DIR", corpora_dir)
+    write_service_file(services_dir, "bad-corpus", corpus="does-not-exist")
+    problems = validate_services(services_dir, models_file)
+    assert any("unknown corpus" in p for p in problems)
+
+
+def test_validate_services_valid_corpus_ok(services_dir, models_file, corpora_dir, monkeypatch):
+    monkeypatch.setattr("ai_actions.corpus.CORPORA_DIR", corpora_dir)
+    (corpora_dir / "mycorpus").mkdir()
+    (corpora_dir / "mycorpus" / "doc.txt").write_text("hello")
+    write_service_file(services_dir, "good-corpus", corpus="mycorpus")
+    assert validate_services(services_dir, models_file) == []
+
+
 def test_validate_services_id_filename_mismatch(services_dir, models_file):
     write_service_file(services_dir, "outer-name", internal_id="inner-name")
     problems = validate_services(services_dir, models_file)
@@ -225,6 +240,76 @@ def test_run_service_without_verify_does_not_touch_lookup(monkeypatch):
         raise AssertionError("resolve_references should not be called")
 
     monkeypatch.setattr("ai_actions.verify.resolve_references", boom)
+
+    def fake_post(url, json, headers, timeout):
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "ok"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    models = {"local": ModelProfile(name="local", url="http://example.test/v1", model="m")}
+
+    result = run_service(_service(), "hello", models=models)
+
+    assert result == "ok"
+
+
+def test_run_service_with_corpus_splices_retrieved_context(monkeypatch):
+    from ai_actions.corpus import Chunk
+
+    captured = {}
+
+    def fake_post(url, json, headers, timeout):
+        captured["json"] = json
+
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "answered"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    monkeypatch.setattr(
+        "ai_actions.corpus.search_corpus",
+        lambda corpus_id, query, **kw: [Chunk(source="syllabus.txt", index=0, text="Class meets on Tuesdays.")],
+    )
+    models = {"local": ModelProfile(name="local", url="http://example.test/v1", model="m")}
+
+    result = run_service(_service(corpus="course"), "When does the class meet?", models=models)
+
+    assert result == "answered"
+    user_message = captured["json"]["messages"][1]["content"]
+    assert "RETRIEVED CONTEXT" in user_message
+    assert "Class meets on Tuesdays." in user_message
+    assert "When does the class meet?" in user_message
+
+
+def test_run_service_with_missing_corpus_raises_config_error(monkeypatch):
+    from ai_actions.corpus import CorpusError
+
+    def boom(corpus_id, query, **kw):
+        raise CorpusError(f"Unknown corpus '{corpus_id}'")
+
+    monkeypatch.setattr("ai_actions.corpus.search_corpus", boom)
+    models = {"local": ModelProfile(name="local", url="http://example.test/v1", model="m")}
+
+    with pytest.raises(ConfigError, match="Unknown corpus"):
+        run_service(_service(corpus="nope"), "a question", models=models)
+
+
+def test_run_service_without_corpus_does_not_touch_retrieval(monkeypatch):
+    def boom(*args, **kwargs):
+        raise AssertionError("search_corpus should not be called")
+
+    monkeypatch.setattr("ai_actions.corpus.search_corpus", boom)
 
     def fake_post(url, json, headers, timeout):
         class Resp:

@@ -1,0 +1,27 @@
+This is a fictional example department FAQ used to demonstrate the
+department-knowledge-assistant service. Names, rooms and procedures
+below are invented for demonstration only.
+
+How do I get a key to my office? Contact the department administrator,
+Room 210, with your staff ID. Keys are usually issued within two working
+days.
+
+How do I book a meeting room? Meeting rooms are booked through the
+shared departmental calendar. Ask the department administrator for
+calendar access if you don't already have it.
+
+Who do I contact about a broken printer? Report printer problems to IT
+Support via the internal helpdesk portal, not the department office.
+
+How do I claim travel expenses for a conference? Submit receipts and a
+completed expense form to the department administrator within one month
+of travel. Reimbursement is normally processed within four weeks.
+
+Where can new starters find the department handbook? The department
+handbook is available on the internal staff wiki, under Department
+Resources. It covers onboarding, expectations for new staff, and key
+contacts.
+
+Who approves new PhD student admissions? The department's graduate
+studies committee reviews and approves all PhD admissions, meeting
+monthly during the admissions cycle.
