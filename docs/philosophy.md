@@ -49,10 +49,15 @@ material — it never gets asked to recall whether a paper exists from
 memory. [`doi-resolve`](services/doi-resolve.md) and
 [`suspicious-reference-detect`](services/suspicious-reference-detect.md)
 use the same lookup for two different framings of the same underlying
-data. The [full catalog](catalog.md#what-the-still-open-entries-share)'s
-retrieval layer (course/policy Q&A) is still the biggest block of
-remaining work — that one needs embeddings and a persistent corpus, not a
-single stateless API call, so it stays its own project.
+data. [`course-qa`](services/course-qa.md),
+[`policy-qa`](services/policy-qa.md), and
+[`department-knowledge-assistant`](services/department-knowledge-assistant.md)
+declare `corpus: <id>` instead: the same pattern, with a directory of
+text files as the source of truth and BM25 lexical search (see
+[Corpora](guide/corpora.md)) doing the resolving, rather than an API
+call. Two different "resolve against a source of truth" mechanisms,
+same shape, both landing in one enriched prompt rather than a second
+model call.
 
 ## What decides what gets built next
 

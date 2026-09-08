@@ -38,6 +38,7 @@ clipboard_on_accept: replace
 | `review` | no (default `text`) | `diff` — word-level diff view, Accept/Reject. `text` — read-only view, manual Copy button. Anything else fails `validate`. |
 | `clipboard_on_accept` | no (default `none`) | `replace` — Accept writes the result to the clipboard. `none` — it doesn't (still copyable manually in `review: text` mode). Anything else fails `validate`. |
 | `verify` | no (default none) | `crossref` — resolve each input line against Crossref before the model call (see below). Anything else fails `validate`. |
+| `corpus` | no (default none) | A corpus id under `corpora/` to search before the model call (see below). `service validate` flags a corpus that doesn't exist. |
 
 ## Choosing `review`/`clipboard_on_accept`
 
@@ -102,3 +103,19 @@ before you run one.
 An optional `AI_ACTIONS_CONTACT_EMAIL` environment variable gets sent to
 Crossref as a courtesy identifier (their "polite pool," for more reliable
 service) — see [Install](../install.md).
+
+## `corpus: <id>`
+
+Set this when the service should answer from a specific set of documents
+(a course's own material, a policy document, a department's knowledge
+base) rather than from the model's own memory. Before the model is
+called, `ai_actions.corpus.search_corpus()` ranks that corpus's chunks
+against the input (the user's question) with BM25 lexical search and
+prepends the top matches as a `RETRIEVED CONTEXT` block — the prompt's
+job is to answer from that block, and to say plainly when it doesn't
+contain the answer, never to fall back on general knowledge. See
+[Corpora](corpora.md) for the full picture: what a corpus actually is, why
+lexical search rather than embeddings, and how to build your own. Unlike
+`verify`, this never touches the network — `service show <id>` prints a
+`corpus:` line either way, so it's clear which kind of external access
+(if any) a given service involves.

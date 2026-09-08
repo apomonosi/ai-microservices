@@ -102,9 +102,9 @@ for what that implies about which model backs which service.
 | 82 | Course Material | Lecture-to-Study-Guide | Convert lectures/slides to study guides | ✅ Done | [`lecture-to-studyguide`](services/lecture-to-studyguide.md) |
 | 83 | Course Material | Lecture-to-Quiz | Generate quizzes from course material | ⬜ Not started |  |
 | 84 | Course Material | Lecture-to-Flashcards | Generate study flashcards | ⬜ Not started |  |
-| 85 | Course Material | Course Q&A | Answer strictly from course material | ⬜ Not started |  |
+| 85 | Course Material | Course Q&A | Answer strictly from course material | ✅ Done | [`course-qa`](services/course-qa.md) |
 | 86 | Course Material | Course Knowledge Graph | Map concepts and prerequisites | ⬜ Not started |  |
-| 87 | Administration | Policy Q&A | Answer questions from university policies | ⬜ Not started |  |
+| 87 | Administration | Policy Q&A | Answer questions from university policies | ✅ Done | [`policy-qa`](services/policy-qa.md) |
 | 88 | Administration | Regulation Explainer | Explain bureaucratic regulations simply | ✅ Done | [`regulation-explain`](services/regulation-explain.md) |
 | 89 | Administration | Policy Comparison | Compare old/new policies | ⬜ Not started |  |
 | 90 | Administration | Form Assistant | Assist with institutional forms | ⬜ Not started |  |
@@ -119,7 +119,7 @@ for what that implies about which model backs which service.
 | 99 | Research Management | Meeting-to-Action-Items | Extract decisions, owners and deadlines | ✅ Done | [`meeting-action-items`](services/meeting-action-items.md) |
 | 100 | Research Management | Research Risk Register | Identify project risks | ✅ Done | [`research-risk-register`](services/research-risk-register.md) |
 | 101 | Research Management | Milestone Health Checker | Identify project delays/issues | ⬜ Not started |  |
-| 102 | Knowledge | Department Knowledge Assistant | Q&A over department documents | ⬜ Not started |  |
+| 102 | Knowledge | Department Knowledge Assistant | Q&A over department documents | ✅ Done | [`department-knowledge-assistant`](services/department-knowledge-assistant.md) |
 | 103 | Knowledge | Lab Knowledge Assistant | Q&A over lab knowledge | ⬜ Not started |  |
 | 104 | Knowledge | Research Group Assistant | Search internal research knowledge | ⬜ Not started |  |
 | 105 | Knowledge | Research Project Memory | Search decisions, notes and documents | ⬜ Not started |  |
@@ -172,7 +172,7 @@ infrastructure that hasn't been built yet, roughly in this order:
 | Layer | What it takes | Unlocks |
 |---|---|---|
 | Document layer | PDF/DOCX parsing, OCR, chunking | Multi-file inputs — theses, whole papers |
-| Retrieval layer | Embeddings, vector search | Course/policy/lab Q&A (rows 85, 87, 102–105) |
+| Retrieval layer *(partially built — [`corpus: <id>`](guide/service-manifest.md#corpus-id), BM25 lexical search)* | Embeddings/vector search, PDF/DOCX ingestion still open | Rows 85, 87, 102 now use it (`course-qa`, `policy-qa`, `department-knowledge-assistant`). Rows 103–106, 115, 116, 118 stay open — same mechanism, just not built yet |
 | Verification layer *(partially built — [`verify: crossref`](guide/service-manifest.md#verify-crossref))* | Crossref lookups done; OpenAlex/PubMed, retries, caching still open | Rows 11, 19, 20 now use it (`reference-check`, `suspicious-reference-detect`, `doi-resolve`). Rows 12, 16 stay open as close-duplicates for now; row 17 (Reference Formatter) doesn't actually need this layer — it's a deterministic format conversion, not verification |
 | Model router | Route by task, not by default | The minority that outgrows a small local model — e.g. a real Novelty Reviewer (row 39), comparing a manuscript against a whole supplied corpus |
 | Audit log | Record what ran, on what, with which model | Anything used for actual grading or institutional decisions |

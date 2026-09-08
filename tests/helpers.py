@@ -43,6 +43,7 @@ def write_service_file(
     prompt: str = "You are a test assistant.\nRespond briefly.",
     internal_id: str | None = None,
     verify: str | None = None,
+    corpus: str | None = None,
 ) -> Path:
     """Write a minimal-but-valid service manifest.
 
@@ -63,6 +64,8 @@ def write_service_file(
     lines += ["", f"review: {review}", f"clipboard_on_accept: {clipboard_on_accept}"]
     if verify is not None:
         lines.append(f"verify: {verify}")
+    if corpus is not None:
+        lines.append(f"corpus: {corpus}")
     lines.append("")
     path = services_dir / f"{service_id}.yaml"
     path.write_text("\n".join(lines))

@@ -49,6 +49,7 @@ class Service:
     clipboard_on_accept: str = "none"
     description: str = ""
     verify: str | None = None
+    corpus: str | None = None
 
 
 def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
@@ -107,6 +108,7 @@ def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
         clipboard_on_accept=data.get("clipboard_on_accept", "none"),
         description=(data.get("description") or "").strip(),
         verify=data.get("verify"),
+        corpus=data.get("corpus"),
     )
 
 
@@ -191,6 +193,14 @@ def validate_services(
             problems.append(
                 f"{path.name}: invalid verify '{service.verify}' (expected one of {_VALID_VERIFY_TYPES})"
             )
+        if service.corpus is not None:
+            from . import corpus as corpus_mod
+
+            if not (corpus_mod.CORPORA_DIR / service.corpus).is_dir():
+                problems.append(
+                    f"{path.name}: references unknown corpus '{service.corpus}' "
+                    f"(expected directory {corpus_mod.CORPORA_DIR / service.corpus})"
+                )
 
     return problems
 
@@ -218,6 +228,19 @@ def run_service(
             "proof, check the score and details against what's claimed; a miss is not proof of "
             "fabrication, Crossref doesn't index everything):\n"
             f"{resolved}"
+        )
+
+    if service.corpus:
+        from . import corpus as corpus_mod
+
+        try:
+            chunks = corpus_mod.search_corpus(service.corpus, input_text)
+        except corpus_mod.CorpusError as exc:
+            raise ConfigError(str(exc)) from exc
+        context_block = "\n\n".join(f"[{chunk.source} #{chunk.index}]\n{chunk.text}" for chunk in chunks)
+        user_content = (
+            f"RETRIEVED CONTEXT from '{service.corpus}' (answer only using this; say so plainly "
+            f"if it doesn't contain the answer):\n{context_block}\n\n---\nQuestion: {user_content}"
         )
 
     payload = {

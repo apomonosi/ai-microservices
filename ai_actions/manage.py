@@ -24,7 +24,7 @@ import yaml
 from .core import SERVICES_DIR, _VALID_CLIPBOARD_MODES, _VALID_REVIEW_TYPES, _service_path
 
 _ID_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
-_SETTABLE_FIELDS = ("name", "category", "model", "review", "clipboard_on_accept")
+_SETTABLE_FIELDS = ("name", "category", "model", "review", "clipboard_on_accept", "corpus")
 PLACEHOLDER_PROMPT = "TODO: write the system prompt for this service."
 
 

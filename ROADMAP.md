@@ -179,7 +179,7 @@ and they've been built:
 Growing the catalog is just adding YAML files — no engine changes needed.
 Pull from `docs/catalog.md` opportunistically; it's a backlog, not a
 deliverable, and there's no fixed target count. As of this writing the
-library has 58 services, added in four batches using a consistent rule
+library has 61 services, added in five batches using a consistent rule
 for what qualifies as "just a YAML file" versus a separate mini-project:
 
 **In scope** (single pasted-text input, one system prompt, no external
@@ -238,3 +238,22 @@ Formatter (row 17) doesn't need this layer at all — it's a deterministic
 format conversion. This is also the first time any service talks to
 anything other than the configured model endpoint — documented plainly
 in docs/local-models.md rather than left implicit.
+
+Fifth batch (course-qa, policy-qa, department-knowledge-assistant): the
+second previously-deferred "harder category" - real retrieval, not just
+an in-manuscript check. Same restraint as the fourth batch: a new
+optional `corpus: <id>` manifest field (`ai_actions/corpus.py`) does BM25
+lexical search over a plain directory of text files, no embedding model
+and no new dependency, rather than a full vector-search pipeline. See
+[Corpora](docs/guide/corpora.md) for the mechanics and the lexical-vs-
+embeddings trade-off. Unlike verify, this stays entirely local - no
+network involved at all, which docs/local-models.md now says explicitly
+rather than leaving it ambiguous by omission. `corpora/` is gitignored
+except `corpora/examples/` (the three small, fictional demo corpora these
+services point at): a real corpus is a user's own course notes or
+institutional documents, exactly the kind of "unpublished material" this
+roadmap already says should default to local-only, and this repo is
+headed for public. Lab/Research Group/Research Project Memory/Equipment/
+Library rows (103–106, 115, 116, 118) share the same mechanism but
+weren't added yet - three was enough to prove the layer out; more are a
+`corpus` field and a text directory away.

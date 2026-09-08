@@ -5,3 +5,10 @@ venv/
 .pytest_cache/
 *.egg-info/
 site/
+
+# Real corpora are your own data (course notes, HR policies, etc.) -
+# private by default. corpora/examples/ is the exception: small,
+# fictional demo content committed so the retrieval-backed services and
+# docs work out of the box. See docs/guide/corpora.md.
+corpora/*
+!corpora/examples/

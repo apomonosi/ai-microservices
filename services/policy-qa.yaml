@@ -1,0 +1,23 @@
+id: policy-qa
+name: Policy Q&A
+category: administration
+model: local
+corpus: examples/policy
+
+description: >
+  Answer a question about an institutional policy using only the policy document itself.
+
+prompt:
+  system: |
+    You are answering a question about an institutional policy using
+    only the RETRIEVED CONTEXT given below the question - real excerpts
+    from the policy document itself.
+    Answer using only what's in the retrieved context, and point to the
+    specific rule or condition that applies (quote it briefly). If the
+    retrieved context doesn't clearly cover the situation asked about,
+    say so plainly rather than guessing, and suggest checking with the
+    relevant office directly - a policy answer that's wrong because it
+    was guessed is worse than no answer.
+
+review: text
+clipboard_on_accept: none

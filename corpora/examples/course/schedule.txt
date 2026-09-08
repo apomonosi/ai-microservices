@@ -1,0 +1,25 @@
+Week 1: Course introduction and review of relational data models.
+
+Week 2: Normalization and schema design. Problem set 1 assigned.
+
+Week 3: Query processing and indexing. Problem set 1 due.
+
+Week 4: Transactions and concurrency control. Problem set 2 assigned.
+
+Week 5: Distributed storage fundamentals. Problem set 2 due.
+
+Week 6: The CAP theorem and consistency models.
+
+Week 7: Midterm exam, held in the normal lecture slot.
+
+Week 8: Replication and partitioning. Problem set 3 assigned.
+
+Week 9: Column-oriented and key-value stores. Problem set 3 due.
+
+Week 10: Final project proposals due; in-class project work session.
+
+Week 11: Stream processing systems. Problem set 4 assigned.
+
+Week 12: Case studies of real distributed data systems. Problem set 4 due.
+
+Week 13: Final project presentations. No new material assigned.

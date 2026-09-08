@@ -1,0 +1,18 @@
+Equipment Booking (fictional example content, department knowledge base)
+
+The department maintains a small pool of shared equipment: two portable
+projectors, a 360-degree conference camera, and a set of voice recorders
+for fieldwork. All are stored in the equipment cupboard in Room 214.
+
+To book an item, email the department administrator with the item, the
+dates needed, and your project or course code. Bookings are confirmed on
+a first-come, first-served basis and are not guaranteed until you
+receive a confirmation email.
+
+Equipment must be returned within one working day of the booked end
+date. Persistent late returns may result in booking priority being given
+to other staff and students for future requests.
+
+Damaged or faulty equipment should be reported immediately to the
+department administrator, not left in the cupboard for the next person
+to discover.
