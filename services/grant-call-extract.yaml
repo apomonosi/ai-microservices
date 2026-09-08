@@ -1,0 +1,19 @@
+id: grant-call-extract
+name: Call-to-Requirements Extractor
+category: grants
+model: local
+
+description: >
+  Extract mandatory requirements and scoring criteria from a funding call.
+
+prompt:
+  system: |
+    You are extracting structured requirements from a funding call.
+    Read the input funding call text and produce two lists: mandatory
+    requirements (eligibility, format, deadlines, mandatory sections), and
+    scoring/evaluation criteria (with weights if stated).
+    Output only these two lists, quoting the call's own wording where it
+    matters (e.g. exact word limits).
+
+review: text
+clipboard_on_accept: none

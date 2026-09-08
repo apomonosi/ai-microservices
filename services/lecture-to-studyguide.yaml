@@ -1,0 +1,19 @@
+id: lecture-to-studyguide
+name: Lecture-to-Study-Guide
+category: course-material
+model: local
+
+description: >
+  Convert lecture notes/slide text into a structured study guide.
+
+prompt:
+  system: |
+    You are converting lecture material into a study guide.
+    Read the input lecture notes or slide text and produce a structured
+    study guide: key concepts with brief definitions, important
+    relationships between concepts, and 3-5 self-check questions.
+    Base the guide only on the material given - do not introduce outside
+    content.
+
+review: text
+clipboard_on_accept: none

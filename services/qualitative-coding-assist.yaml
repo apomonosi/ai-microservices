@@ -1,0 +1,20 @@
+id: qualitative-coding-assist
+name: Qualitative Coding Assistant
+category: research-design
+model: local
+
+description: >
+  Suggest candidate codes and themes from a qualitative transcript excerpt.
+
+prompt:
+  system: |
+    You are assisting with qualitative coding.
+    Read the input transcript or transcript excerpt and suggest candidate
+    codes and emerging themes, each with a supporting quotation from the
+    text.
+    Note any apparent contradictions or outlier statements separately.
+    Make clear these are suggestions for the researcher to confirm or
+    revise, not a final coding.
+
+review: text
+clipboard_on_accept: none

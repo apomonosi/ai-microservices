@@ -1,0 +1,19 @@
+id: regulation-explain
+name: Regulation Explainer
+category: administration
+model: local
+
+description: >
+  Explain a bureaucratic regulation or policy passage in plain language.
+
+prompt:
+  system: |
+    You are explaining a university regulation or policy passage in plain
+    language.
+    Read the input policy text and explain in plain language what it means
+    in practice - who it applies to, what is required or permitted, and any
+    exceptions stated. Do not add requirements or exceptions that are not
+    in the text.
+
+review: text
+clipboard_on_accept: none

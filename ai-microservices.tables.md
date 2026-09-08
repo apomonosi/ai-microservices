@@ -18,10 +18,10 @@ Since you already mentioned **proofreader, coder, and translator**, I’ve marke
 |   3 | ✍️ Academic Writing     | Journal Style Adapter              | Adapt manuscript to journal guidelines            | ⬜ Not started |
 |   4 | ✍️ Academic Writing     | Abstract Generator                 | Generate structured and conventional abstracts    |     ✅ Done    |
 |   5 | ✍️ Academic Writing     | Title Generator                    | Generate and evaluate academic titles             |     ✅ Done    |
-|   6 | ✍️ Academic Writing     | Introduction Reviewer              | Evaluate problem, gap, question and contribution  | ⬜ Not started |
+|   6 | ✍️ Academic Writing     | Introduction Reviewer              | Evaluate problem, gap, question and contribution  |     ✅ Done    |
 |   7 | ✍️ Academic Writing     | Argument Mapper                    | Map claims, arguments and supporting evidence     | ⬜ Not started |
 |   8 | ✍️ Academic Writing     | Academic Structure Checker         | Check logical organization of a manuscript        | ⬜ Not started |
-|   9 | ✍️ Academic Writing     | Terminology Consistency Checker    | Detect inconsistent terminology and abbreviations | ⬜ Not started |
+|   9 | ✍️ Academic Writing     | Terminology Consistency Checker    | Detect inconsistent terminology and abbreviations |     ✅ Done    |
 |  10 | ✍️ Academic Writing     | Academic Conciseness Checker       | Identify unnecessary verbosity and repetition     |     ✅ Done    |
 |  11 | 📚 References           | Reference Checker                  | Verify bibliographic references and metadata      | ⬜ Not started |
 |  12 | 📚 References           | Citation Verifier                  | Verify DOI, authors, title, journal and year      | ⬜ Not started |
@@ -30,10 +30,10 @@ Since you already mentioned **proofreader, coder, and translator**, I’ve marke
 |  15 | 📚 References           | Citation Overuse Checker           | Identify unnecessary or excessive citations       |     ✅ Done    |
 |  16 | 📚 References           | Citation Recency Checker           | Identify outdated supporting literature           | ⬜ Not started |
 |  17 | 📚 References           | Reference Formatter                | Convert references between citation styles        | ⬜ Not started |
-|  18 | 📚 References           | Bibliography Deduplicator          | Detect duplicate references                       | ⬜ Not started |
+|  18 | 📚 References           | Bibliography Deduplicator          | Detect duplicate references                       |     ✅ Done    |
 |  19 | 📚 References           | Suspicious Reference Detector      | Identify references that cannot be verified       | ⬜ Not started |
 |  20 | 📚 References           | DOI Resolver                       | Find and validate DOI metadata                    | ⬜ Not started |
-|  21 | 📚 Literature           | Literature Review Assistant        | Assist with planning and conducting reviews       | ⬜ Not started |
+|  21 | 📚 Literature           | Literature Review Assistant        | Assist with planning and conducting reviews       |     ✅ Done    |
 |  22 | 📚 Literature           | Search Query Generator             | Generate database-specific search strategies      |     ✅ Done    |
 |  23 | 📚 Literature           | Search Strategy Critic             | Evaluate literature search strategies             |     ✅ Done    |
 |  24 | 📚 Literature           | Paper Screening Assistant          | Classify papers as include/exclude/maybe          | ⬜ Not started |
@@ -48,15 +48,15 @@ Since you already mentioned **proofreader, coder, and translator**, I’ve marke
 |  33 | 🔬 Paper Review         | AI Paper Pre-Reviewer              | Pre-review manuscript before submission           | ⬜ Not started |
 |  34 | 🔬 Paper Review         | Structure Reviewer                 | Check consistency between paper sections          |     ✅ Done    |
 |  35 | 🔬 Paper Review         | Methodology Reviewer               | Evaluate research design and methods              |     ✅ Done    |
-|  36 | 🔬 Paper Review         | Statistical Reviewer               | Identify statistical-method concerns              | ⬜ Not started |
-|  37 | 🔬 Paper Review         | Reproducibility Reviewer           | Check whether research can be reproduced          | ⬜ Not started |
+|  36 | 🔬 Paper Review         | Statistical Reviewer               | Identify statistical-method concerns              |     ✅ Done    |
+|  37 | 🔬 Paper Review         | Reproducibility Reviewer           | Check whether research can be reproduced          |     ✅ Done    |
 |  38 | 🔬 Paper Review         | Claims Reviewer                    | Audit strength and support of major claims        |     ✅ Done    |
 |  39 | 🔬 Paper Review         | Novelty Reviewer                   | Compare contribution against supplied literature  | ⬜ Not started |
 |  40 | 🔬 Paper Review         | Reviewer #2 Simulator              | Generate skeptical reviewer questions             |     ✅ Done    |
 |  41 | 🔬 Paper Review         | Journal Rejection Risk Analyzer    | Identify likely desk-review/rejection risks       | ⬜ Not started |
 |  42 | 🔬 Paper Review         | Reviewer Response Checker          | Check whether author addressed reviewer comments  | ⬜ Not started |
 |  43 | 🎓 Thesis               | Thesis Structure Auditor           | Audit overall thesis structure                    |     ✅ Done    |
-|  44 | 🎓 Thesis               | Thesis Consistency Checker         | Find contradictions across chapters               | ⬜ Not started |
+|  44 | 🎓 Thesis               | Thesis Consistency Checker         | Find contradictions across chapters               |     ✅ Done    |
 |  45 | 🎓 Thesis               | Thesis Terminology Checker         | Ensure terminology is consistent                  | ⬜ Not started |
 |  46 | 🎓 Thesis               | Thesis Examiner                    | Simulate examiner assessment                      |     ✅ Done    |
 |  47 | 🎓 Thesis               | Viva Simulator                     | Simulate oral thesis defense                      | ⬜ Not started |
@@ -64,54 +64,54 @@ Since you already mentioned **proofreader, coder, and translator**, I’ve marke
 |  49 | 🎓 Thesis               | Thesis-to-Public-Summary           | Produce accessible thesis summary                 | ⬜ Not started |
 |  50 | 🎓 Thesis               | Thesis Chapter Reviewer            | Review individual thesis chapters                 | ⬜ Not started |
 |  51 | 🔬 Research Design      | Research Question Critic           | Evaluate research-question quality                |     ✅ Done    |
-|  52 | 🔬 Research Design      | Hypothesis Reviewer                | Evaluate hypotheses                               | ⬜ Not started |
-|  53 | 🔬 Research Design      | Study Design Assistant             | Suggest appropriate study designs                 | ⬜ Not started |
+|  52 | 🔬 Research Design      | Hypothesis Reviewer                | Evaluate hypotheses                               |     ✅ Done    |
+|  53 | 🔬 Research Design      | Study Design Assistant             | Suggest appropriate study designs                 |     ✅ Done    |
 |  54 | 🔬 Research Design      | Survey Question Reviewer           | Detect poor/biased/ambiguous questions            |     ✅ Done    |
 |  55 | 🔬 Research Design      | Interview Guide Reviewer           | Evaluate interview questions                      | ⬜ Not started |
-|  56 | 🔬 Research Design      | Qualitative Coding Assistant       | Suggest codes and themes                          | ⬜ Not started |
+|  56 | 🔬 Research Design      | Qualitative Coding Assistant       | Suggest codes and themes                          |     ✅ Done    |
 |  57 | 🔬 Research Design      | Codebook Generator                 | Generate candidate qualitative codebooks          | ⬜ Not started |
-|  58 | 📊 Data & Statistics    | Statistical Method Selector        | Match research questions to methods               | ⬜ Not started |
+|  58 | 📊 Data & Statistics    | Statistical Method Selector        | Match research questions to methods               |     ✅ Done    |
 |  59 | 💻 Coding               | Code Assistant                     | Generate/explain research code                    |     ✅ Done    |
 |  60 | 💻 Coding               | Code Reviewer                      | Review Python/R/other research code               |     ✅ Done    |
-|  61 | 💻 Coding               | Jupyter Notebook Auditor           | Check reproducibility and notebook quality        | ⬜ Not started |
-|  62 | 📊 Data & Statistics    | Statistical Interpretation Checker | Compare statistical output with interpretation    | ⬜ Not started |
+|  61 | 💻 Coding               | Jupyter Notebook Auditor           | Check reproducibility and notebook quality        |     ✅ Done    |
+|  62 | 📊 Data & Statistics    | Statistical Interpretation Checker | Compare statistical output with interpretation    |     ✅ Done    |
 |  63 | 📊 Data & Statistics    | Table Checker                      | Check tables against manuscript text              | ⬜ Not started |
 |  64 | 📊 Data & Statistics    | Figure Caption Generator           | Generate scientific figure captions               | ⬜ Not started |
 |  65 | 📊 Data & Statistics    | Numerical Consistency Checker      | Find inconsistent numbers across documents        |     ✅ Done    |
 |  66 | 🧪 Research Integrity   | Research Integrity Preflight       | Comprehensive integrity audit                     | ⬜ Not started |
-|  67 | 🧪 Research Integrity   | Claim–Evidence Auditor             | Trace major claims to evidence                    | ⬜ Not started |
-|  68 | 🧪 Research Integrity   | Data Provenance Checker            | Check where reported data came from               | ⬜ Not started |
-|  69 | 🧪 Research Integrity   | AI Disclosure Assistant            | Generate appropriate AI-use disclosure            | ⬜ Not started |
+|  67 | 🧪 Research Integrity   | Claim–Evidence Auditor             | Trace major claims to evidence                    |     ✅ Done    |
+|  68 | 🧪 Research Integrity   | Data Provenance Checker            | Check where reported data came from               |     ✅ Done    |
+|  69 | 🧪 Research Integrity   | AI Disclosure Assistant            | Generate appropriate AI-use disclosure            |     ✅ Done    |
 |  70 | 🧪 Research Integrity   | AI Policy Compliance Checker       | Check AI use against institutional policy         | ⬜ Not started |
 |  71 | 🧪 Research Integrity   | Research Reporting Checker         | Check completeness of research reporting          | ⬜ Not started |
 |  72 | 🧪 Research Integrity   | Statistical Integrity Checker      | Flag questionable statistical claims              | ⬜ Not started |
 |  73 | 🎓 Teaching             | Assignment Generator               | Generate assignments from learning objectives     |     ✅ Done    |
-|  74 | 🎓 Teaching             | Assignment Quality Reviewer        | Evaluate assignment quality                       | ⬜ Not started |
+|  74 | 🎓 Teaching             | Assignment Quality Reviewer        | Evaluate assignment quality                       |     ✅ Done    |
 |  75 | 🎓 Teaching             | Rubric Generator                   | Generate assessment rubrics                       | ⬜ Not started |
 |  76 | 🎓 Teaching             | Rubric Consistency Checker         | Check rubric against assignment/objectives        | ⬜ Not started |
 |  77 | 🎓 Teaching             | Exam Question Generator            | Generate questions by difficulty/cognitive level  |     ✅ Done    |
 |  78 | 🎓 Teaching             | Exam Question Quality Checker      | Detect ambiguity and quality problems             | ⬜ Not started |
-|  79 | 🎓 Teaching             | Student Feedback Generator         | Generate formative feedback                       | ⬜ Not started |
+|  79 | 🎓 Teaching             | Student Feedback Generator         | Generate formative feedback                       |     ✅ Done    |
 |  80 | 🎓 Teaching             | Socratic Tutor                     | Guide students through questions                  | ⬜ Not started |
-|  81 | 🎓 Teaching             | Misconception Detector             | Identify conceptual misunderstandings             | ⬜ Not started |
-|  82 | 📖 Course Material      | Lecture-to-Study-Guide             | Convert lectures/slides to study guides           | ⬜ Not started |
+|  81 | 🎓 Teaching             | Misconception Detector             | Identify conceptual misunderstandings             |     ✅ Done    |
+|  82 | 📖 Course Material      | Lecture-to-Study-Guide             | Convert lectures/slides to study guides           |     ✅ Done    |
 |  83 | 📖 Course Material      | Lecture-to-Quiz                    | Generate quizzes from course material             | ⬜ Not started |
 |  84 | 📖 Course Material      | Lecture-to-Flashcards              | Generate study flashcards                         | ⬜ Not started |
 |  85 | 📖 Course Material      | Course Q&A                         | Answer strictly from course material              | ⬜ Not started |
 |  86 | 📖 Course Material      | Course Knowledge Graph             | Map concepts and prerequisites                    | ⬜ Not started |
 |  87 | 🏛️ Administration      | Policy Q&A                         | Answer questions from university policies         | ⬜ Not started |
-|  88 | 🏛️ Administration      | Regulation Explainer               | Explain bureaucratic regulations simply           | ⬜ Not started |
+|  88 | 🏛️ Administration      | Regulation Explainer               | Explain bureaucratic regulations simply           |     ✅ Done    |
 |  89 | 🏛️ Administration      | Policy Comparison                  | Compare old/new policies                          | ⬜ Not started |
 |  90 | 🏛️ Administration      | Form Assistant                     | Assist with institutional forms                   | ⬜ Not started |
 |  91 | 🧪 Research Admin       | Ethics Application Assistant       | Help prepare ethics applications                  | ⬜ Not started |
 |  92 | 💰 Grants               | Grant Proposal Reviewer            | Review proposals against criteria                 | ⬜ Not started |
-|  93 | 💰 Grants               | Call-to-Requirements Extractor     | Extract requirements from funding calls           | ⬜ Not started |
+|  93 | 💰 Grants               | Call-to-Requirements Extractor     | Extract requirements from funding calls           |     ✅ Done    |
 |  94 | 💰 Grants               | Proposal Compliance Checker        | Check proposal against call requirements          | ⬜ Not started |
 |  95 | 💰 Grants               | Grant Abstract Optimizer           | Improve grant abstracts                           | ⬜ Not started |
 |  96 | 💰 Grants               | Budget Narrative Checker           | Compare budget and narrative                      | ⬜ Not started |
 |  97 | 💰 Grants               | Funding Opportunity Matcher        | Match researchers to funding calls                | ⬜ Not started |
-|  98 | 🗓️ Research Management | Research Meeting Summarizer        | Summarize scientific meetings                     | ⬜ Not started |
-|  99 | 🗓️ Research Management | Meeting-to-Action-Items            | Extract decisions, owners and deadlines           | ⬜ Not started |
+|  98 | 🗓️ Research Management | Research Meeting Summarizer        | Summarize scientific meetings                     |     ✅ Done    |
+|  99 | 🗓️ Research Management | Meeting-to-Action-Items            | Extract decisions, owners and deadlines           |     ✅ Done    |
 | 100 | 🗓️ Research Management | Research Risk Register             | Identify project risks                            | ⬜ Not started |
 | 101 | 🗓️ Research Management | Milestone Health Checker           | Identify project delays/issues                    | ⬜ Not started |
 | 102 | 🧠 Knowledge            | Department Knowledge Assistant     | Q&A over department documents                     | ⬜ Not started |
@@ -132,7 +132,7 @@ Since you already mentioned **proofreader, coder, and translator**, I’ve marke
 | 117 | 📚 Library              | Search Strategy Critic             | Audit systematic-review searches                  |     ✅ Done    |
 | 118 | 📚 Library              | Subject Heading Assistant          | Map concepts to controlled vocabularies           | ⬜ Not started |
 | 119 | 📝 Publishing           | Review Quality Checker             | Assess quality of peer reviews                    | ⬜ Not started |
-| 120 | 📝 Publishing           | Reviewer Tone Checker              | Make reviews more constructive                    | ⬜ Not started |
+| 120 | 📝 Publishing           | Reviewer Tone Checker              | Make reviews more constructive                    |     ✅ Done    |
 | 121 | 📝 Publishing           | Reviewer Conflict Checker          | Identify potential conflicts                      | ⬜ Not started |
 | 122 | 📝 Publishing           | Reviewer Expertise Assistant       | Identify required expertise areas                 | ⬜ Not started |
 | 123 | 📣 Communication        | Paper-to-Press-Release             | Convert research to press release                 |     ✅ Done    |

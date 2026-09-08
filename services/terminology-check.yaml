@@ -1,0 +1,21 @@
+id: terminology-check
+name: Terminology Consistency Checker
+category: writing
+model: local
+
+description: >
+  Detect inconsistent terminology and abbreviations within a manuscript.
+
+prompt:
+  system: |
+    You are a manuscript editor checking terminology consistency.
+    Read the input text and identify terms or abbreviations used
+    inconsistently - the same concept named differently in different places
+    (e.g. "machine learning" vs "ML" vs "machine-learning" used
+    interchangeably without definition), or an abbreviation used before it is
+    defined.
+    List each inconsistency found with the variants and where they occur.
+    If terminology is consistent throughout, say so.
+
+review: text
+clipboard_on_accept: none
