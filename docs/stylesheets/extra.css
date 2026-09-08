@@ -1,144 +1,226 @@
-/* ai-actions docs theme.
+/* ai-actions docs theme: "field journal on warm parchment."
  *
- * Grounded in the project's own vernacular: a service is a prompt kept as
- * a plain-text file under version control, so the type treatment leans on
- * a monospace voice for structure (headings carry a shell-comment "#"),
- * and tables read like the manifest/status tables the catalog is built
- * from. Palette is a muted paper/ink pairing with one restrained
- * pine-green accent - deliberately not a bright "AI" gradient or neon.
+ * Grounded in a reference palette of warm ivory/oat neutrals with a
+ * single clay accent reserved for action, editorial serif body copy
+ * paired with a declarative sans for chrome/headings, and flat
+ * elevation (surface-tone shifts + hairline borders, never shadow).
+ * Dark mode reuses the palette's own documented "inversion" surface
+ * (near-black ink) rather than inventing a separate dark system.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-  --df-paper: #f1efe5;
-  --df-paper-dim: #e3e0d1;
-  --df-ink: #1d2420;
-  --df-ink-soft: #454f49;
-  --df-accent: #3c6a58;
-  --df-accent-soft: #dde8e0;
-  --df-border: #cfcabb;
+  --df-canvas: #f0eee6; /* page background - parchment */
+  --df-surface: #faf9f5; /* cards, code, tables - one step brighter */
+  --df-surface-warm: #f5e3c7; /* manilla - featured admonitions */
+  --df-surface-deep: #e3dacc; /* secondary grouped panels */
+  --df-ink: #141413; /* text, headings */
+  --df-ink-soft: #87867f; /* secondary text, borders on dark */
+  --df-muted: #b0aea5; /* muted labels, inactive nav */
+  --df-border: #cccbc8; /* hairlines */
+  --df-accent: #d97757; /* clay - the one chromatic accent */
+  --df-accent-deep: #c6613f; /* clay, hover/pressed */
 
-  --md-text-font: "Work Sans", "Segoe UI", system-ui, sans-serif;
+  --md-text-font: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
   --md-code-font: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --df-display-font: "Fraunces", Georgia, "Times New Roman", serif;
+  --df-display-font: "Inter", system-ui, "Segoe UI", Arial, sans-serif;
 }
 
 [data-md-color-scheme="slate"] {
-  --df-paper: #171b19;
-  --df-paper-dim: #20251f;
-  --df-ink: #dfe3dd;
-  --df-ink-soft: #a8b0a9;
-  --df-accent: #7fb8a0;
-  --df-accent-soft: #223129;
-  --df-border: #303830;
+  /* The palette's own "inversion surface" - not a separate dark system. */
+  --df-canvas: #141413;
+  --df-surface: #1c1b19;
+  --df-surface-warm: #2b2620;
+  --df-surface-deep: #242320;
+  --df-ink: #faf9f5;
+  --df-ink-soft: #b0aea5;
+  --df-muted: #87867f;
+  --df-border: #3d3d3a;
+  --df-accent: #e08f6d;
+  --df-accent-deep: #d97757;
 }
 
 [data-md-color-scheme="default"] {
   --md-primary-fg-color: var(--df-ink);
-  --md-primary-bg-color: var(--df-paper);
+  --md-primary-bg-color: var(--df-canvas);
   --md-accent-fg-color: var(--df-accent);
-  --md-default-bg-color: var(--df-paper);
-  --md-typeset-a-color: var(--df-accent);
+  --md-default-bg-color: var(--df-canvas);
+  --md-typeset-a-color: var(--df-ink);
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: var(--df-paper);
+  --md-primary-fg-color: var(--df-canvas);
   --md-primary-bg-color: var(--df-ink);
   --md-accent-fg-color: var(--df-accent);
-  --md-default-bg-color: var(--df-paper);
-  --md-typeset-a-color: var(--df-accent);
+  --md-default-bg-color: var(--df-canvas);
+  --md-typeset-a-color: var(--df-ink);
 }
 
 .md-typeset {
   color: var(--df-ink);
 }
 
-/* Headings read like the prompts they document: a small mono "#" marker,
-   same character a system-prompt author would use for a comment line. */
-.md-typeset h1,
-.md-typeset h2,
-.md-typeset h3 {
+/* Headings: declarative sans for the page title, editorial serif for
+   section voice - the dual system the reference carries throughout. */
+.md-typeset h1 {
   font-family: var(--df-display-font);
-  font-weight: 600;
-  text-wrap: balance;
+  font-weight: 700;
   letter-spacing: -0.01em;
+  text-wrap: balance;
+  font-size: 2.1rem;
 }
 
-.md-typeset h1 {
-  font-size: 2.25rem;
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--md-text-font);
+  font-weight: 600;
+  text-wrap: balance;
 }
 
 .md-typeset h2 {
   margin-top: 2em;
-  padding-top: 0.6em;
+  padding-top: 0.7em;
   border-top: 1px solid var(--df-border);
+  font-size: 1.5rem;
 }
 
-.md-typeset h2::before {
-  content: "# ";
-  font-family: var(--md-code-font);
-  font-weight: 400;
-  color: var(--df-accent);
-  font-size: 0.75em;
-  letter-spacing: 0;
+.md-typeset h3 {
+  font-size: 1.2rem;
+  color: var(--df-ink);
 }
 
-.md-typeset h3::before {
-  content: "## ";
-  font-family: var(--md-code-font);
-  font-weight: 400;
-  color: var(--df-ink-soft);
-  font-size: 0.7em;
-  letter-spacing: 0;
+/* Persistent underlines on inline links - print convention, not a
+   hover reveal. Nav/tabs/buttons are excluded; those are UI chrome. */
+.md-typeset a {
+  color: var(--df-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--df-muted);
+  text-underline-offset: 0.15em;
 }
 
-/* Tables: the catalog and status tables are the working data of this
-   project, not decoration - give them the same tabular-numeral care as
-   a manifest listing. */
+.md-typeset a:hover {
+  color: var(--df-accent-deep);
+  text-decoration-color: currentcolor;
+}
+
+.md-typeset a code {
+  color: inherit;
+}
+
+/* Cards/admonitions: flat surface-tone fill, bottom-only radius - the
+   reference's signature corner treatment, applied here to callouts
+   instead of buttons (this site has none). No shadow, ever. */
+.md-typeset .admonition,
+.md-typeset details {
+  background-color: var(--df-surface-warm);
+  border: none;
+  border-radius: 0 0 16px 16px;
+  box-shadow: none;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  background-color: transparent;
+  font-family: var(--df-display-font);
+  font-weight: 600;
+  border: none;
+}
+
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  background-color: var(--df-accent);
+}
+
+/* Tables: hairline border and tone-shift zebra, no shadow, tabular
+   figures for anything numeric (the catalog's status tables). */
 .md-typeset table:not([class]) {
   border: 1px solid var(--df-border);
-  border-radius: 2px;
+  border-radius: 8px;
   font-variant-numeric: tabular-nums;
+  box-shadow: none;
 }
 
 .md-typeset table:not([class]) th {
-  background-color: var(--df-paper-dim);
-  font-family: var(--md-code-font);
-  font-weight: 500;
+  background-color: var(--df-surface-deep);
+  font-family: var(--df-display-font);
+  font-weight: 600;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-.md-typeset table:not([class]) tr:nth-child(even) {
-  background-color: color-mix(in srgb, var(--df-paper-dim) 45%, transparent);
+.md-typeset table:not([class]) tr {
+  background-color: var(--df-surface);
 }
 
-/* Code blocks: the prompt-as-source-code motif - a quiet accent rule on
-   the left edge, like a diff or a terminal prompt. */
+.md-typeset table:not([class]) tr:nth-child(even) {
+  background-color: var(--df-surface-deep);
+}
+
+/* Code: flat surface fill, bottom-only radius (the buttons signature,
+   reapplied), left accent rule kept as a quiet "this is a prompt" cue. */
 .md-typeset pre {
+  background-color: var(--df-surface);
   border-left: 3px solid var(--df-accent);
-  border-radius: 2px;
+  border-radius: 0 0 12px 12px;
+  box-shadow: none;
 }
 
 .md-typeset code {
   font-family: var(--md-code-font);
+  background-color: var(--df-surface-deep);
 }
 
-/* Inline status glyphs already carry meaning in the catalog (Done / Not
-   started) - keep them legible against the accent, not styled further. */
+.md-typeset pre code {
+  background-color: transparent;
+}
 
+/* Chrome: header/tabs blend with the canvas rather than reading as a
+   separate colored bar; the footer is the system's one deliberate
+   inversion (in dark mode it collapses into the same ink tone). */
 .md-header,
 .md-tabs {
-  background-color: var(--df-ink);
+  background-color: var(--df-canvas);
+  color: var(--df-ink);
+  box-shadow: none;
 }
 
-[data-md-color-scheme="slate"] .md-header,
-[data-md-color-scheme="slate"] .md-tabs {
-  background-color: #0e1110;
+.md-header {
+  border-bottom: 1px solid var(--df-border);
+}
+
+.md-header__title,
+.md-header__topic,
+.md-tabs__link {
+  font-family: var(--df-display-font);
+}
+
+.md-search__input {
+  background-color: var(--df-surface);
+  border-radius: 0 0 10px 10px;
 }
 
 .md-footer {
   background-color: var(--df-ink);
+  color: var(--df-canvas);
+}
+
+[data-md-color-scheme="slate"] .md-footer {
+  background-color: #0a0a09;
+}
+
+.md-nav__link--active,
+.md-nav__link:focus,
+.md-nav__link:hover {
+  color: var(--df-accent-deep);
+}
+
+/* Kill Material's default drop-shadows wherever they'd otherwise
+   contradict "elevation through tone, not shadow." */
+.md-tabs,
+.md-search__form,
+.md-typeset .highlight,
+.md-dialog {
+  box-shadow: none !important;
 }
