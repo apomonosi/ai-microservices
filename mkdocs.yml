@@ -7,6 +7,7 @@ docs_dir: docs
 
 theme:
   name: material
+  font: false
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -24,6 +25,9 @@ theme:
     - content.code.copy
     - search.suggest
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search
   - gen-files:
@@ -38,6 +42,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Install: install.md
+  - Examples: examples.md
   - Guide:
       - CLI reference: guide/cli.md
       - Service manifest: guide/service-manifest.md
@@ -45,6 +50,8 @@ nav:
       - Pipelines: guide/pipelines.md
       - Model profiles: guide/models.md
   - Service catalog: services/index.md
+  - Full catalog: catalog.md
+  - Design principles: philosophy.md
   - Architecture: architecture.md
   - Roadmap: roadmap.md
 

@@ -1,0 +1,144 @@
+/* ai-actions docs theme.
+ *
+ * Grounded in the project's own vernacular: a service is a prompt kept as
+ * a plain-text file under version control, so the type treatment leans on
+ * a monospace voice for structure (headings carry a shell-comment "#"),
+ * and tables read like the manifest/status tables the catalog is built
+ * from. Palette is a muted paper/ink pairing with one restrained
+ * pine-green accent - deliberately not a bright "AI" gradient or neon.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --df-paper: #f1efe5;
+  --df-paper-dim: #e3e0d1;
+  --df-ink: #1d2420;
+  --df-ink-soft: #454f49;
+  --df-accent: #3c6a58;
+  --df-accent-soft: #dde8e0;
+  --df-border: #cfcabb;
+
+  --md-text-font: "Work Sans", "Segoe UI", system-ui, sans-serif;
+  --md-code-font: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --df-display-font: "Fraunces", Georgia, "Times New Roman", serif;
+}
+
+[data-md-color-scheme="slate"] {
+  --df-paper: #171b19;
+  --df-paper-dim: #20251f;
+  --df-ink: #dfe3dd;
+  --df-ink-soft: #a8b0a9;
+  --df-accent: #7fb8a0;
+  --df-accent-soft: #223129;
+  --df-border: #303830;
+}
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--df-ink);
+  --md-primary-bg-color: var(--df-paper);
+  --md-accent-fg-color: var(--df-accent);
+  --md-default-bg-color: var(--df-paper);
+  --md-typeset-a-color: var(--df-accent);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--df-paper);
+  --md-primary-bg-color: var(--df-ink);
+  --md-accent-fg-color: var(--df-accent);
+  --md-default-bg-color: var(--df-paper);
+  --md-typeset-a-color: var(--df-accent);
+}
+
+.md-typeset {
+  color: var(--df-ink);
+}
+
+/* Headings read like the prompts they document: a small mono "#" marker,
+   same character a system-prompt author would use for a comment line. */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--df-display-font);
+  font-weight: 600;
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h1 {
+  font-size: 2.25rem;
+}
+
+.md-typeset h2 {
+  margin-top: 2em;
+  padding-top: 0.6em;
+  border-top: 1px solid var(--df-border);
+}
+
+.md-typeset h2::before {
+  content: "# ";
+  font-family: var(--md-code-font);
+  font-weight: 400;
+  color: var(--df-accent);
+  font-size: 0.75em;
+  letter-spacing: 0;
+}
+
+.md-typeset h3::before {
+  content: "## ";
+  font-family: var(--md-code-font);
+  font-weight: 400;
+  color: var(--df-ink-soft);
+  font-size: 0.7em;
+  letter-spacing: 0;
+}
+
+/* Tables: the catalog and status tables are the working data of this
+   project, not decoration - give them the same tabular-numeral care as
+   a manifest listing. */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--df-border);
+  border-radius: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--df-paper-dim);
+  font-family: var(--md-code-font);
+  font-weight: 500;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.md-typeset table:not([class]) tr:nth-child(even) {
+  background-color: color-mix(in srgb, var(--df-paper-dim) 45%, transparent);
+}
+
+/* Code blocks: the prompt-as-source-code motif - a quiet accent rule on
+   the left edge, like a diff or a terminal prompt. */
+.md-typeset pre {
+  border-left: 3px solid var(--df-accent);
+  border-radius: 2px;
+}
+
+.md-typeset code {
+  font-family: var(--md-code-font);
+}
+
+/* Inline status glyphs already carry meaning in the catalog (Done / Not
+   started) - keep them legible against the accent, not styled further. */
+
+.md-header,
+.md-tabs {
+  background-color: var(--df-ink);
+}
+
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: #0e1110;
+}
+
+.md-footer {
+  background-color: var(--df-ink);
+}
