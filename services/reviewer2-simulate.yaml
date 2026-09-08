@@ -1,5 +1,5 @@
 id: reviewer2-simulate
-name: Reviewer #2 Simulator
+name: "Reviewer #2 Simulator"
 category: paper-review
 model: local
 

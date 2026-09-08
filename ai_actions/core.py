@@ -8,6 +8,7 @@ a new one is purely a matter of dropping in another YAML file.
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -52,7 +53,12 @@ class Service:
 def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
     if not path.exists():
         raise ConfigError(f"Model profile file not found: {path}")
-    data = yaml.safe_load(path.read_text()) or {}
+    try:
+        data = yaml.safe_load(path.read_text()) or {}
+    except yaml.YAMLError as exc:
+        raise ConfigError(f"{path}: invalid YAML: {exc}") from exc
+    if not isinstance(data, dict):
+        raise ConfigError(f"{path}: expected a YAML mapping at the top level, got {type(data).__name__}")
     profiles: dict[str, ModelProfile] = {}
     for name, cfg in data.items():
         try:
@@ -64,7 +70,7 @@ def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
                 timeout=cfg.get("timeout", 120),
                 api_key=cfg.get("api_key"),
             )
-        except KeyError as exc:
+        except (KeyError, TypeError) as exc:
             raise ConfigError(f"Model profile '{name}' is missing required field {exc}") from exc
     return profiles
 
@@ -77,11 +83,18 @@ def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
     path = _service_path(service_id, services_dir)
     if not path.exists():
         raise ConfigError(f"Unknown service '{service_id}' (expected {path})")
-    data = yaml.safe_load(path.read_text()) or {}
+    try:
+        data = yaml.safe_load(path.read_text()) or {}
+    except yaml.YAMLError as exc:
+        raise ConfigError(f"Service '{service_id}': invalid YAML: {exc}") from exc
+    if not isinstance(data, dict):
+        raise ConfigError(
+            f"Service '{service_id}': expected a YAML mapping at the top level, got {type(data).__name__}"
+        )
     try:
         system_prompt = data["prompt"]["system"]
         model = data["model"]
-    except KeyError as exc:
+    except (KeyError, TypeError) as exc:
         raise ConfigError(f"Service '{service_id}' is missing required field {exc}") from exc
     return Service(
         id=data.get("id", service_id),
@@ -95,8 +108,79 @@ def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
     )
 
 
+def _load_all_services(services_dir: Path) -> tuple[list[Service], list[tuple[Path, ConfigError]]]:
+    services: list[Service] = []
+    errors: list[tuple[Path, ConfigError]] = []
+    for path in sorted(services_dir.glob("*.yaml")):
+        try:
+            services.append(load_service(path.stem, services_dir))
+        except ConfigError as exc:
+            errors.append((path, exc))
+    return services, errors
+
+
 def list_services(services_dir: Path = SERVICES_DIR) -> list[Service]:
-    return [load_service(path.stem, services_dir) for path in sorted(services_dir.glob("*.yaml"))]
+    """All loadable services. A broken manifest is skipped (with a
+    warning) rather than crashing the whole list/picker — use
+    validate_services() to see what's broken and why.
+    """
+    services, errors = _load_all_services(services_dir)
+    for path, exc in errors:
+        print(f"warning: skipping '{path.name}': {exc}", file=sys.stderr)
+    return services
+
+
+_VALID_REVIEW_TYPES = ("diff", "text")
+_VALID_CLIPBOARD_MODES = ("replace", "none")
+
+
+def validate_services(
+    services_dir: Path = SERVICES_DIR,
+    models_file: Path = MODELS_FILE,
+    only_id: str | None = None,
+) -> list[str]:
+    """Check service manifest(s) and the model profiles they reference.
+    Returns a list of human-readable problems; an empty list means
+    everything checks out.
+    """
+    problems: list[str] = []
+
+    try:
+        models = load_models(models_file)
+    except ConfigError as exc:
+        problems.append(f"models.yaml: {exc}")
+        models = {}
+
+    if only_id is not None:
+        path = _service_path(only_id, services_dir)
+        if not path.exists():
+            return [f"{only_id}: no such service (expected {path})"]
+        try:
+            services = [load_service(only_id, services_dir)]
+        except ConfigError as exc:
+            return [f"{path.name}: {exc}"]
+    else:
+        services, load_errors = _load_all_services(services_dir)
+        for path, exc in load_errors:
+            problems.append(f"{path.name}: {exc}")
+
+    for service in services:
+        path = _service_path(service.id, services_dir)
+        if service.model not in models:
+            problems.append(f"{path.name}: references unknown model '{service.model}'")
+        if service.review not in _VALID_REVIEW_TYPES:
+            problems.append(
+                f"{path.name}: invalid review type '{service.review}' (expected one of {_VALID_REVIEW_TYPES})"
+            )
+        if service.clipboard_on_accept not in _VALID_CLIPBOARD_MODES:
+            problems.append(
+                f"{path.name}: invalid clipboard_on_accept '{service.clipboard_on_accept}' "
+                f"(expected one of {_VALID_CLIPBOARD_MODES})"
+            )
+        if not service.system_prompt.strip():
+            problems.append(f"{path.name}: empty prompt.system")
+
+    return problems
 
 
 def run_service(
