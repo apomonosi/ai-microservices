@@ -108,15 +108,19 @@ def load_service(service_id: str, services_dir: Path = SERVICES_DIR) -> Service:
     )
 
 
-def _load_all_services(services_dir: Path) -> tuple[list[Service], list[tuple[Path, ConfigError]]]:
-    services: list[Service] = []
+def _load_all_services(services_dir: Path) -> tuple[list[tuple[Path, Service]], list[tuple[Path, ConfigError]]]:
+    """Load every service, keyed by its actual file path (not by whatever
+    its internal `id:` field claims — those can disagree, which is
+    exactly one of the things validate_services() checks for).
+    """
+    loaded: list[tuple[Path, Service]] = []
     errors: list[tuple[Path, ConfigError]] = []
     for path in sorted(services_dir.glob("*.yaml")):
         try:
-            services.append(load_service(path.stem, services_dir))
+            loaded.append((path, load_service(path.stem, services_dir)))
         except ConfigError as exc:
             errors.append((path, exc))
-    return services, errors
+    return loaded, errors
 
 
 def list_services(services_dir: Path = SERVICES_DIR) -> list[Service]:
@@ -124,10 +128,10 @@ def list_services(services_dir: Path = SERVICES_DIR) -> list[Service]:
     warning) rather than crashing the whole list/picker — use
     validate_services() to see what's broken and why.
     """
-    services, errors = _load_all_services(services_dir)
+    loaded, errors = _load_all_services(services_dir)
     for path, exc in errors:
         print(f"warning: skipping '{path.name}': {exc}", file=sys.stderr)
-    return services
+    return [service for _, service in loaded]
 
 
 _VALID_REVIEW_TYPES = ("diff", "text")
@@ -156,16 +160,17 @@ def validate_services(
         if not path.exists():
             return [f"{only_id}: no such service (expected {path})"]
         try:
-            services = [load_service(only_id, services_dir)]
+            loaded = [(path, load_service(only_id, services_dir))]
         except ConfigError as exc:
             return [f"{path.name}: {exc}"]
     else:
-        services, load_errors = _load_all_services(services_dir)
+        loaded, load_errors = _load_all_services(services_dir)
         for path, exc in load_errors:
             problems.append(f"{path.name}: {exc}")
 
-    for service in services:
-        path = _service_path(service.id, services_dir)
+    for path, service in loaded:
+        if service.id != path.stem:
+            problems.append(f"{path.name}: internal id '{service.id}' does not match filename '{path.stem}'")
         if service.model not in models:
             problems.append(f"{path.name}: references unknown model '{service.model}'")
         if service.review not in _VALID_REVIEW_TYPES:
