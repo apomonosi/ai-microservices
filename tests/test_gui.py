@@ -1,4 +1,4 @@
-"""GUI widget tests. Skipped entirely if PySide6 isn't installed.
+"""GUI widget tests. Skipped entirely if PySide6 isn't usable.
 
 Runs with QT_QPA_PLATFORM=offscreen (set in conftest.py) so no real
 display is needed — these construct real Qt widgets and simulate
@@ -9,7 +9,12 @@ from __future__ import annotations
 
 import pytest
 
-pytest.importorskip("PySide6")
+# Importing the QtWidgets submodule specifically (not just the top-level
+# PySide6 package) matters: PySide6 can be pip-installed successfully while
+# its compiled QtWidgets extension still fails to load because a system
+# library (e.g. libEGL.so.1) is missing. That failure only surfaces on this
+# import, so this is what needs to trigger the skip.
+pytest.importorskip("PySide6.QtWidgets")
 
 from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox  # noqa: E402
 
