@@ -2,11 +2,21 @@ from __future__ import annotations
 
 import argparse
 import sys
+import textwrap
 from pathlib import Path
 
 from . import clipboard
 from .clipboard import ClipboardError
-from .core import ConfigError, EngineError, Service, list_services, load_service, run_service
+from .core import (
+    ConfigError,
+    EngineError,
+    Service,
+    list_services,
+    load_models,
+    load_service,
+    run_service,
+    validate_services,
+)
 
 
 def _read_input(args: argparse.Namespace) -> str | None:
@@ -144,10 +154,91 @@ def cmd_picker(args: argparse.Namespace) -> int:
     return _execute_service(args, dialog.selected_service)
 
 
-def cmd_list(args: argparse.Namespace) -> int:
-    for service in list_services():
-        print(f"{service.id:20s} {service.category:12s} {service.name}")
+def _filter_services(services: list[Service], category: str | None, query: str | None) -> list[Service]:
+    if category:
+        services = [s for s in services if s.category == category]
+    if query:
+        q = query.lower()
+        services = [s for s in services if q in f"{s.id} {s.name} {s.category} {s.description}".lower()]
+    return services
+
+
+def _print_service_rows(services: list[Service]) -> None:
+    for s in sorted(services, key=lambda s: (s.category, s.id)):
+        print(f"{s.id:28s} {s.category:16s} {s.name}")
+
+
+def cmd_service_list(args: argparse.Namespace) -> int:
+    services = _filter_services(list_services(), args.category, args.query)
+    if not services:
+        print("no matching services", file=sys.stderr)
+        return 0
+    _print_service_rows(services)
     return 0
+
+
+def cmd_service_show(args: argparse.Namespace) -> int:
+    try:
+        service = load_service(args.service_id)
+    except ConfigError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    try:
+        models = load_models()
+    except ConfigError:
+        models = {}
+    profile = models.get(service.model)
+    model_line = (
+        f"{service.model}  ->  {profile.model} @ {profile.url}"
+        if profile is not None
+        else f"{service.model}  (not found in models.yaml)"
+    )
+
+    print(f"id:                  {service.id}")
+    print(f"name:                {service.name}")
+    print(f"category:            {service.category}")
+    print(f"model:               {model_line}")
+    print(f"review:              {service.review}")
+    print(f"clipboard_on_accept: {service.clipboard_on_accept}")
+    if service.description:
+        print(f"description:         {service.description}")
+    print()
+    print("prompt.system:")
+    print(textwrap.indent(service.system_prompt.rstrip(), "    "))
+    return 0
+
+
+def cmd_service_search(args: argparse.Namespace) -> int:
+    services = list_services()
+    q = args.query.lower()
+    matches = [
+        s for s in services if q in f"{s.id} {s.name} {s.category} {s.description} {s.system_prompt}".lower()
+    ]
+    if not matches:
+        print(f"no services match '{args.query}'", file=sys.stderr)
+        return 0
+    _print_service_rows(matches)
+    return 0
+
+
+def cmd_service_categories(args: argparse.Namespace) -> int:
+    counts: dict[str, int] = {}
+    for s in list_services():
+        counts[s.category] = counts.get(s.category, 0) + 1
+    for category in sorted(counts):
+        print(f"{category:20s} {counts[category]:3d}")
+    return 0
+
+
+def cmd_service_validate(args: argparse.Namespace) -> int:
+    problems = validate_services(only_id=args.service_id)
+    if not problems:
+        print(f"{args.service_id}: OK" if args.service_id else "All services OK")
+        return 0
+    for problem in problems:
+        print(f"error: {problem}", file=sys.stderr)
+    return 1
 
 
 def _add_execution_args(parser: argparse.ArgumentParser) -> None:
@@ -186,8 +277,37 @@ def build_parser() -> argparse.ArgumentParser:
     _add_execution_args(picker_p)
     picker_p.set_defaults(func=cmd_picker)
 
-    list_p = sub.add_parser("list", help="List available services")
-    list_p.set_defaults(func=cmd_list)
+    list_p = sub.add_parser("list", help="List available services (alias for `service list`)")
+    list_p.add_argument("--category", help="Only show this category")
+    list_p.add_argument("--query", help="Only show services matching this text")
+    list_p.set_defaults(func=cmd_service_list)
+
+    service_p = sub.add_parser("service", help="Inspect and manage the service library")
+    service_sub = service_p.add_subparsers(dest="service_command", required=True)
+
+    svc_list_p = service_sub.add_parser("list", help="List services")
+    svc_list_p.add_argument("--category", help="Only show this category")
+    svc_list_p.add_argument("--query", help="Only show services matching this text")
+    svc_list_p.set_defaults(func=cmd_service_list)
+
+    svc_show_p = service_sub.add_parser("show", help="Show full details (including the prompt) of one service")
+    svc_show_p.add_argument("service_id")
+    svc_show_p.set_defaults(func=cmd_service_show)
+
+    svc_search_p = service_sub.add_parser(
+        "search", help="Search id/name/category/description/prompt text across all services"
+    )
+    svc_search_p.add_argument("query")
+    svc_search_p.set_defaults(func=cmd_service_search)
+
+    svc_categories_p = service_sub.add_parser("categories", help="List categories in use, with counts")
+    svc_categories_p.set_defaults(func=cmd_service_categories)
+
+    svc_validate_p = service_sub.add_parser(
+        "validate", help="Check service manifests (and their model references) for problems"
+    )
+    svc_validate_p.add_argument("service_id", nargs="?", help="Validate only this service (default: all)")
+    svc_validate_p.set_defaults(func=cmd_service_validate)
 
     return parser
 
