@@ -169,7 +169,6 @@ review-free runs, and building a new service end to end.
 
 ## Where to go next
 
-- [Do you need the cloud?](local-models.md) — why a small local model is enough, and whether your hardware can run one.
 - [Install](install.md) — getting `ai-actions` on your PATH and wired to a KDE shortcut.
 - [Examples](examples.md) — concrete walkthroughs: pipelines, batch runs, building a service.
 - [CLI reference](guide/cli.md) — `run`, `picker`, `list`, `service ...`.

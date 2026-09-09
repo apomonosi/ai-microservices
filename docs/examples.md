@@ -80,9 +80,10 @@ for the rest of the lifecycle — duplicating, adjusting fields, deleting.
 ## Check a bibliography against a real database
 
 Unlike every other service, [`reference-check`](services/reference-check.md)
-talks to Crossref's public API as well as your local model — see [Do you
-need the cloud?](local-models.md#the-exception-three-services-that-do-talk-to-the-network).
-Paste one reference per line, real ones and a fabricated one included:
+talks to Crossref's public API as well as your local model — one of only
+three services that touch the network at all (see
+[Service manifest](guide/service-manifest.md#verify-crossref)). Paste one
+reference per line, real ones and a fabricated one included:
 
 ```bash
 ai-actions run reference-check --text "$(cat <<'EOF'

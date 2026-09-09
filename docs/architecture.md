@@ -88,8 +88,7 @@ exactly one request; `verify.py` only changes what goes into it.
 
 **Why `corpus.py` is BM25, not embeddings.** An embedding-based retrieval
 pipeline needs an embedding model (most single-local-model setups don't
-expose one — see [Do you need the cloud?](local-models.md)), a vector
-index, and a similarity-search library. At the scale this project
+expose one), a vector index, and a similarity-search library. At the scale this project
 actually deals with — a syllabus, a policy document, a department's FAQ,
 dozens to a few hundred paragraphs — a dependency-free BM25 ranker scores
 every chunk in milliseconds with nothing beyond the standard library.

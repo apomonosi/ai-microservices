@@ -31,8 +31,9 @@ copy that a normal install would produce.
 
 Edit `models.yaml` to point at your OpenAI-compatible endpoint (e.g. a
 local `llama-server`). Don't have one running yet, or not sure your
-hardware can handle it? See [Do you need the cloud?](local-models.md) —
-most laptops from the last few years can:
+hardware can handle it? Most laptops from the last few years can — a
+4B–8B model at Q4/Q5 quantization runs comfortably on 8–16GB of RAM, no
+GPU required, just slower per response without one:
 
 ```yaml
 local:
@@ -50,8 +51,9 @@ Every service references a profile here by name (`model: local`). See
 
 The three reference-verification services
 ([`reference-check`](guide/service-manifest.md#verify-crossref) and
-friends — see [Do you need the cloud?](local-models.md)) look references
-up against Crossref's public API. Setting an environment variable puts
+friends — the only services that talk to the network at all) look
+references up against Crossref's public API. Setting an environment
+variable puts
 you in Crossref's "polite pool" (their term), which gets more reliable
 service than anonymous requests:
 

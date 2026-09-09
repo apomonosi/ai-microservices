@@ -49,8 +49,7 @@ an embedding-based upgrade stays possible later if a real corpus
 demonstrates the need.
 
 Every corpus-backed service is fully local — unlike `verify: crossref`,
-searching a corpus never leaves your machine. See
-[Do you need the cloud?](../local-models.md).
+searching a corpus never leaves your machine.
 
 ## Chunking
 
