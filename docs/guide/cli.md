@@ -28,6 +28,13 @@ interactively first) share the same options:
 `--text`/`--file`/`--stdin` are mutually exclusive; omit all three to read
 the clipboard (the default, and what a KDE shortcut normally does).
 
+While the request to the model is in flight, `run`/`picker` show a
+system-tray icon (tooltip: which service is running) so a shortcut press
+doesn't look like nothing happened — it clears as soon as the result
+comes back. This is best-effort: on a desktop with no tray at all (e.g.
+GNOME's default session), or with no display (SSH, cron, CI), it's
+silently skipped — never a reason a command fails.
+
 By default the result goes through the **Result Inspector** dialog: a diff
 view with Accept/Reject for services declared `review: diff`, or a
 read-only view with a manual Copy button for `review: text`. Nothing is
@@ -85,9 +92,12 @@ on it (pass `--no-edit` to skip). `--clipboard-on-accept` defaults to
 
 **`edit <id>`** — opens the manifest in `$EDITOR`/`$VISUAL` directly.
 
-**`set <id> [--name] [--category] [--model] [--review diff|text] [--clipboard-on-accept replace|none]`**
+**`set <id> [--name] [--category] [--model] [--review diff|text] [--clipboard-on-accept replace|none] [--corpus ID]`**
 — updates one or more simple fields without opening an editor (a targeted
 line replacement, so the hand-crafted prompt block is never touched).
+`--corpus` only works on a service whose manifest already has a `corpus:`
+line (see [Corpora](corpora.md)) — it repoints an existing field, it
+doesn't add a new one.
 
 **`duplicate <source_id> <new_id> [--name] [--no-edit]`** — clones an
 existing service under a new id, a good starting point for a variant.

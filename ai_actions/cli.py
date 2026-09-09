@@ -8,6 +8,7 @@ from pathlib import Path
 from . import clipboard
 from .clipboard import ClipboardError
 from . import corpus as corpus_mod
+from .gui.tray import BusyIndicator
 from .core import (
     ConfigError,
     EngineError,
@@ -121,7 +122,8 @@ def _execute_service(args: argparse.Namespace, service: Service) -> int:
         return 1
 
     try:
-        result = run_service(service, input_text)
+        with BusyIndicator(f"ai-actions: running {service.name}…"):
+            result = run_service(service, input_text)
     except (ConfigError, EngineError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
