@@ -7,6 +7,12 @@ display or PySide6 installed. If PySide6 isn't available, or there's no
 system tray to show an icon in (headless/SSH sessions, CI, GNOME's
 default Wayland session), BusyIndicator quietly does nothing.
 
+The icon is deliberately held up for a minimum real duration (see
+_REGISTER_SECONDS/_MIN_VISIBLE_SECONDS below) rather than shown and
+hidden the instant the call starts/finishes - confirmed directly that
+without this, a fast local model can complete before the desktop shell
+has even registered the tray icon, so nothing is ever seen at all.
+
 Known residual limitation: if DISPLAY/WAYLAND_DISPLAY is set but stale -
 pointing at an X/Wayland session that's no longer there, e.g. a
 disconnected SSH X11-forwarding session - Qt's platform-plugin failure is
@@ -23,6 +29,30 @@ from __future__ import annotations
 
 import os
 import sys
+import time
+
+# How long to keep pumping the Qt event loop right after `.show()`, before
+# letting the blocking model call start. A single `processEvents()` call
+# only drains whatever's *already* queued - it doesn't wait for the
+# desktop shell's D-Bus round trip that actually registers a brand-new
+# StatusNotifierItem, which is asynchronous and can take a moment. Without
+# this, a fast local model can finish (and hide the icon again) before
+# Plasma ever gets to paint it - confirmed directly against a real KDE
+# Plasma session: a one-shot processEvents() showed nothing, holding the
+# icon up with a real event loop for a couple of seconds did.
+_REGISTER_SECONDS = 0.3
+
+# Minimum total time the icon stays up, enforced in __exit__. The whole
+# point is a human being able to notice it; a sub-100ms flash defeats
+# that even once registration has completed.
+_MIN_VISIBLE_SECONDS = 0.6
+
+
+def _pump(app, seconds: float) -> None:
+    deadline = time.monotonic() + seconds
+    while time.monotonic() < deadline:
+        app.processEvents()
+        time.sleep(0.01)
 
 
 def _display_might_exist() -> bool:
@@ -54,6 +84,7 @@ class BusyIndicator:
         self._tooltip = tooltip
         self._icon = None
         self._app = None
+        self._shown_at = None
 
     def __enter__(self) -> "BusyIndicator":
         # Broad except by design: this is a cosmetic nicety layered over
@@ -77,7 +108,8 @@ class BusyIndicator:
             icon = QSystemTrayIcon(QIcon.fromTheme("system-run"))
             icon.setToolTip(self._tooltip)
             icon.show()
-            app.processEvents()
+            self._shown_at = time.monotonic()
+            _pump(app, _REGISTER_SECONDS)
             self._app, self._icon = app, icon
         except Exception:
             self._app, self._icon = None, None
@@ -86,6 +118,10 @@ class BusyIndicator:
     def __exit__(self, *exc_info) -> bool:
         try:
             if self._icon is not None:
+                elapsed = time.monotonic() - self._shown_at
+                remaining = _MIN_VISIBLE_SECONDS - elapsed
+                if remaining > 0:
+                    _pump(self._app, remaining)
                 self._icon.hide()
                 self._app.processEvents()
         except Exception:
