@@ -55,12 +55,13 @@ nav:
       - Creating services: guide/creating-services.md
       - Pipelines: guide/pipelines.md
       - Model profiles: guide/models.md
-      - Corpora: guide/corpora.md
-  - Service catalog: services/index.md
-  - Full catalog: catalog.md
-  - Design principles: philosophy.md
-  - Architecture: architecture.md
-  - Roadmap: roadmap.md
+  - Catalogs:
+     - Service catalog: services/index.md
+     - Full catalog: catalog.md
+  - Development:
+     - Design principles: philosophy.md
+     - Architecture: architecture.md
+     - Roadmap: roadmap.md
 
 # mkdocs serve only watches docs_dir by default; these are the real sources
 # the generated services/ pages and several guide pages are derived from.
