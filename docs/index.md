@@ -150,15 +150,14 @@ Clone the ai-actions repo, cd into it, and then
 ```bash
 # setup the virtual environment
 
-uv venv
 uv sync
-uv pip install -r requirements.txt
-uv pip install -e .
+uv run ai-action list
+
+# call to ai-actions
+
 . .venv/bin/activate
 
-# call to action
-
-ai-actions list
+ai-actions show proofread
 ai-actions run proofread          # clipboard -> service -> review -> clipboard
 ai-actions picker                 # search/pick a service interactively
 ```
