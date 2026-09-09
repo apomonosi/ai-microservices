@@ -30,10 +30,12 @@ the clipboard (the default, and what a KDE shortcut normally does).
 
 While the request to the model is in flight, `run`/`picker` show a
 system-tray icon (tooltip: which service is running) so a shortcut press
-doesn't look like nothing happened — it clears as soon as the result
-comes back. This is best-effort: on a desktop with no tray at all (e.g.
-GNOME's default session), or with no display (SSH, cron, CI), it's
-silently skipped — never a reason a command fails.
+doesn't look like nothing happened. It stays up for at least ~0.6
+seconds even against a very fast local model — long enough to actually
+notice — and clears shortly after the result comes back. This is
+best-effort: on a desktop with no tray at all (e.g. GNOME's default
+session), or with no display (SSH, cron, CI), it's silently skipped —
+never a reason a command fails.
 
 By default the result goes through the **Result Inspector** dialog: a diff
 view with Accept/Reject for services declared `review: diff`, or a

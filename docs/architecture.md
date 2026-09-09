@@ -113,3 +113,17 @@ guarantee this module must not break. It doesn't catch every case: a
 aborts, because there's no way to tell a stale one from a live one
 without risking the same abort — a pre-existing risk for GUI mode and
 `picker` that this module now shares rather than introduces.
+
+**Why `BusyIndicator` pumps the event loop for a fixed ~0.3s after
+`.show()`, and enforces a ~0.6s minimum total visible time, rather than
+one `processEvents()` call before and after.** Confirmed directly against
+a real KDE Plasma session: a single `processEvents()` call is not enough
+— registering a brand-new tray icon (a `StatusNotifierItem`) with the
+desktop shell is an asynchronous D-Bus round trip, and a fast local model
+can finish (hiding the icon again) before that round trip, let alone a
+human, ever sees it. `_pump()` keeps servicing the event loop for a fixed
+real duration instead of a single pass, and `__exit__` tops up to a
+minimum visible time if the call finished faster than that — the whole
+point is a human noticing, so an imperceptible flash is a bug, not a
+success. `scripts/debug_tray.py`'s 20-second hold with a full `app.exec()`
+loop is what surfaced this in the first place.
