@@ -95,10 +95,9 @@ that (see `services/reference-check.yaml` for the pattern: a miss is
 
 This is the one case in the whole engine where running a service means
 something other than the pasted text reaching only your configured model
-endpoint — each reference line is also sent to Crossref's public API. See
-[Do you need the cloud?](../local-models.md) for what that means in
-practice, and `service show <id>` prints a `verify:` line as a heads-up
-before you run one.
+endpoint — each reference line is also sent to Crossref's public API.
+`service show <id>` prints a `verify:` line as a heads-up before you run
+one.
 
 An optional `AI_ACTIONS_CONTACT_EMAIL` environment variable gets sent to
 Crossref as a courtesy identifier (their "polite pool," for more reliable

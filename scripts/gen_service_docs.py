@@ -69,7 +69,7 @@ for service in services:
         f"| **clipboard on accept** | {service.clipboard_on_accept} |",
     ]
     if service.verify:
-        lines.append(f"| **verify** | `{service.verify}` (sends input lines to an external API - see [Do you need the cloud?](../local-models.md)) |")
+        lines.append(f"| **verify** | `{service.verify}` (sends input lines to an external API) |")
     if service.corpus:
         lines.append(f"| **corpus** | `{service.corpus}` (local retrieval only, see [Corpora](../guide/corpora.md)) |")
     if service.description:

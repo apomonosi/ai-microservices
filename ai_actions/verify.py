@@ -2,9 +2,10 @@
 `verify: crossref` in their manifest.
 
 This is the one place in the engine that talks to a third-party service
-rather than only the configured model endpoint - see docs/local-models.md
-for the privacy trade-off this implies for the handful of services that
-use it. Crossref's public `works` API needs no API key; a per-line lookup
+rather than only the configured model endpoint - see
+docs/guide/service-manifest.md's `verify: crossref` section for the
+privacy trade-off this implies for the handful of services that use it.
+Crossref's public `works` API needs no API key; a per-line lookup
 never raises, since one bad or ambiguous reference shouldn't abort the
 whole batch (the same "skip what's broken" posture core.list_services()
 already applies to a broken manifest file).
