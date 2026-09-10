@@ -18,6 +18,9 @@ external-reasoning:
   temperature: 0.1
   timeout: 300
   # api_key: ...          # uncomment if the endpoint requires auth
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false      # e.g. Qwen3: skip its thinking pass for faster single-shot replies
 ```
 
 ## Fields
@@ -29,6 +32,7 @@ external-reasoning:
 | `temperature` | no (default `0.2`) | |
 | `timeout` | no (default `120`) | Seconds. Give a slower/larger model more headroom. |
 | `api_key` | no | Sent as `Authorization: Bearer <key>` if set. |
+| `extra_body` | no | Arbitrary extra fields merged into the request body sent to this profile's endpoint — for server-specific options outside the standard OpenAI chat-completions shape (e.g. vLLM/SGLang's `chat_template_kwargs`, used to turn off Qwen3's `enable_thinking` reasoning pass so a quick rewrite doesn't pay for a reasoning trace it doesn't need). Passed through as-is; `model`/`temperature`/`messages` always win if a key collides. |
 | `type` | — | Currently informational only — every profile is treated as OpenAI-compatible regardless of this value. |
 
 ## Multiple profiles

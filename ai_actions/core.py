@@ -36,6 +36,7 @@ class ModelProfile:
     temperature: float = 0.2
     timeout: float = 120.0
     api_key: str | None = None
+    extra_body: dict | None = None
 
 
 @dataclass
@@ -71,6 +72,7 @@ def load_models(path: Path = MODELS_FILE) -> dict[str, ModelProfile]:
                 temperature=cfg.get("temperature", 0.2),
                 timeout=cfg.get("timeout", 120),
                 api_key=cfg.get("api_key"),
+                extra_body=cfg.get("extra_body"),
             )
         except (KeyError, TypeError) as exc:
             raise ConfigError(f"Model profile '{name}' is missing required field {exc}") from exc
@@ -243,14 +245,20 @@ def run_service(
             f"if it doesn't contain the answer):\n{context_block}\n\n---\nQuestion: {user_content}"
         )
 
-    payload = {
-        "model": profile.model,
-        "temperature": profile.temperature,
-        "messages": [
-            {"role": "system", "content": service.system_prompt},
-            {"role": "user", "content": user_content},
-        ],
-    }
+    # extra_body first, then the fields we control - so an arbitrary
+    # passthrough option (e.g. vLLM's chat_template_kwargs) can never
+    # accidentally clobber model/temperature/messages.
+    payload = dict(profile.extra_body or {})
+    payload.update(
+        {
+            "model": profile.model,
+            "temperature": profile.temperature,
+            "messages": [
+                {"role": "system", "content": service.system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+        }
+    )
     headers = {"Content-Type": "application/json"}
     if profile.api_key:
         headers["Authorization"] = f"Bearer {profile.api_key}"
