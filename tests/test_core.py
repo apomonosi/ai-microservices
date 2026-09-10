@@ -88,6 +88,25 @@ def test_load_models_missing_required_field(tmp_path):
         load_models(path)
 
 
+def test_load_models_extra_body(tmp_path):
+    path = tmp_path / "models.yaml"
+    path.write_text(
+        "local:\n"
+        "  url: http://example.test/v1\n"
+        "  model: test-model\n"
+        "  extra_body:\n"
+        "    chat_template_kwargs:\n"
+        "      enable_thinking: false\n"
+    )
+    models = load_models(path)
+    assert models["local"].extra_body == {"chat_template_kwargs": {"enable_thinking": False}}
+
+
+def test_load_models_extra_body_defaults_to_none(models_file):
+    models = load_models(models_file)
+    assert models["local"].extra_body is None
+
+
 # --- list_services -----------------------------------------------------------
 
 
@@ -290,6 +309,67 @@ def test_run_service_with_corpus_splices_retrieved_context(monkeypatch):
     assert "RETRIEVED CONTEXT" in user_message
     assert "Class meets on Tuesdays." in user_message
     assert "When does the class meet?" in user_message
+
+
+def test_run_service_merges_extra_body_into_request(monkeypatch):
+    captured = {}
+
+    def fake_post(url, json, headers, timeout):
+        captured["json"] = json
+
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "ok"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    models = {
+        "local": ModelProfile(
+            name="local",
+            url="http://example.test/v1",
+            model="m",
+            extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+        )
+    }
+
+    run_service(_service(), "hello", models=models)
+
+    assert captured["json"]["chat_template_kwargs"] == {"enable_thinking": False}
+
+
+def test_run_service_extra_body_cannot_override_model_or_messages(monkeypatch):
+    captured = {}
+
+    def fake_post(url, json, headers, timeout):
+        captured["json"] = json
+
+        class Resp:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"choices": [{"message": {"content": "ok"}}]}
+
+        return Resp()
+
+    monkeypatch.setattr("ai_actions.core.requests.post", fake_post)
+    models = {
+        "local": ModelProfile(
+            name="local",
+            url="http://example.test/v1",
+            model="m",
+            extra_body={"model": "sneaky-override", "messages": "sneaky"},
+        )
+    }
+
+    run_service(_service(), "hello", models=models)
+
+    assert captured["json"]["model"] == "m"
+    assert captured["json"]["messages"][1]["content"] == "hello"
 
 
 def test_run_service_with_missing_corpus_raises_config_error(monkeypatch):

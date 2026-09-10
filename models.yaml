@@ -14,3 +14,6 @@ external-qwen:
   temperature: 0.1
   timeout: 300
   # api_key: CHANGE_ME            # uncomment if the endpoint requires auth
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false      # skip Qwen3's thinking pass - much faster for these single-shot services
